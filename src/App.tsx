@@ -1,11 +1,8 @@
 import {
     AppBar,
     Box,
-    Button,
     createTheme,
     IconButton,
-    Paper,
-    Stack,
     ThemeProvider,
     Toolbar,
     Typography
@@ -16,7 +13,7 @@ import {Outlet} from "react-router-dom";
 function App() {
 
     return <ThemeProvider theme={createTheme({palette: {mode: "dark"}})}>
-        <AppBar sx={{ height: "7vh" }}>
+        <AppBar sx={{ height: "10vh" }}>
             <Toolbar>
                 <IconButton sx={{
                     mr: 2
@@ -28,7 +25,7 @@ function App() {
                 </Typography>
             </Toolbar>
         </AppBar>
-        <Box sx={{ mt: "7vh", height: "93vh" }}>
+        <Box sx={{ mt: "10vh", height: "90vh" }}>
            <Outlet />
         </Box>
     </ThemeProvider>
