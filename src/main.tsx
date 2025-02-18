@@ -21,7 +21,7 @@ const store = createStore({
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-export const axios = new Axios({ baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? "http://localhost:3000" : "" })
+export const axios = new Axios({ baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? "http://localhost:3000" : "https://hkrgm2-backend.vercel.app" })
 
 // Update indexDB data
 axios.get("/places/all").then(r => {

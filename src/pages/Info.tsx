@@ -19,7 +19,6 @@ import {
     Add,
     CreditCard,
     Label,
-    Launch,
     MonetizationOn,
     People,
     PeopleOutline,
@@ -40,7 +39,7 @@ export function Info() {
         <Typography color={"textSecondary"} fontSize={"xx-small"}>
             ID: {data.id}
         </Typography>
-        <Typography fontSize={"xxx-large"}>
+        <Typography fontSize={"xx-large"}>
             {data.name}
         </Typography>
         <Box sx={{ "*": { m: 0.25 } }}>
@@ -56,9 +55,13 @@ export function Info() {
         </Typography>
 
         <Divider>Map</Divider>
-        <Button variant={"contained"} endIcon={<Launch/>} onClick={() => window.open(data.google, "_blank")}>Google
-            Map</Button>
-
+        {/*<Button variant={"contained"} endIcon={<Launch/>} onClick={() => window.open(data.google, "_blank")}>Google Map</Button>*/}
+        <iframe
+            src={data.google}
+            loading={"lazy"}
+            referrerPolicy="no-referrer-when-downgrade"
+            height={200}
+        />
         <Divider>Arcades</Divider>
 
         <TableContainer component={Paper}>
@@ -96,13 +99,13 @@ export function Info() {
         <Divider>Comments</Divider>
 
         <Stack justifyContent={"space-around"} alignItems={"center"} direction={"row"}>
-            <h1>{data.star.toFixed(1)}</h1>
+            <h1>{typeof data.star === "number" ? data.star?.toFixed(1) : 0}</h1>
             <Rating
                 size={"large"}
                 value={data.star}
                 readOnly
             />
-            <p>(5)</p>
+            <p>(?)</p>
         </Stack>
         <Stack direction={"row"} justifyContent={"space-around"}>
             <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}/>

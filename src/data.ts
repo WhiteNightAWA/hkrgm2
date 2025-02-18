@@ -8,7 +8,17 @@ export const gamesMap: StringMap = {
     jubeat: "Jubeat",
     sdvx: "SDVX",
     taiko: "太鼓の達人",
-    chunithm: "CHUNITHM"
+    chunithm: "CHUNITHM",
+    gtdr_dm: "GTDR DM",
+    gtdr_gf: "GTDR GF",
+    reflec: "Reflec Beat",
+    iidx: "beatmania IIDX",
+    wacca: "WACCA",
+    taiko_old: "舊太鼓達人",
+    gc: "GROOVE COASTER",
+    db: "DANZBASE",
+    diva: "Project DIVA Arcade",
+    de: "DanceEvolution"
 };
 
 export const gameAvatar: { [key: string]: string } = {
@@ -35,3 +45,10 @@ export interface PlaceType {
     games: { [key: string]: [number, string, number] };
     coins: boolean;
 }
+
+export const PlaceList: StringMap = {
+    all: "全部",
+    nt: "新界",
+    kn: "九龍",
+    hki: "香港島"
+};
