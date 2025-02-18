@@ -19,3 +19,19 @@ export const gameAvatar: { [key: string]: string } = {
     taiko: "https://pbs.twimg.com/profile_images/501238914330271744/znFmAp9R_400x400.jpeg",
     chunithm: "https://chunithm.tw/logo.png"
 }
+
+export interface PlaceType {
+    id: string;
+    name: string;
+    desc: string;
+    nicks: string[];
+    place: string;
+    google: string;
+    star: number,
+    smoke: number;
+    people: number;
+    locationX: number;
+    locationY: number;
+    games: { [key: string]: [number, string, number] };
+    coins: boolean;
+}

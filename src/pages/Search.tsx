@@ -1,98 +1,88 @@
 import {
     Avatar,
     AvatarGroup,
-    Box,
+    Button,
+    ButtonGroup,
     Card,
     CardActionArea,
     CardContent,
     CardHeader,
     Divider,
-    IconButton, Rating,
+    IconButton,
+    Rating,
     Stack,
     Typography
 } from "@mui/material";
 import {SetStateAction, useState} from "react";
 import {Filter} from "../components/Filter.tsx";
 import {
+    ArrowDownward,
+    ArrowUpward,
     CreditCard,
     LocationOn,
     MonetizationOn,
     People,
     PeopleOutline,
     SmokeFree,
-    SmokingRooms
+    SmokingRooms,
+    Sort
 } from "@mui/icons-material";
-import {gameAvatar} from "../data.ts";
-import {b} from "vite/dist/node/types.d-aGj9QkWt";
+import {gameAvatar, PlaceType} from "../data.ts";
+import {useNavigate} from "react-router";
 
 export interface filterType {
     name: string;
     place: string;
     games: string[];
-}
-
-interface PlaceType {
-    name: string;
-    desc: string;
-    nicks: string[];
-    place: string;
-    google: string;
-    star: 4,
-    smoke: number,
-    people: number;
-    location: [number, number];
-    games: { [key: string]: number };
-    coins: boolean;
-}
-
-const tempData: PlaceType[] = [
-    createData("iGame", "-1樓", [], "nt", "https://maps.app.goo.gl/VRcidTwd8coUY1gc8", [22.45373896482803, 114.16726396927531], {
-        maimai: 1, maimaidx: 1, sdvx: 1, chunithm: 1, jubeat: 2, taiko: 2
-    }),
-]
-
-function createData(name: string, desc: string, nick: string[], place: string, google: string, location: [number, number], games: {
-    [key: string]: number
-}): PlaceType {
-    return {
-        name: name,
-        desc: desc,
-        nicks: nick,
-        place: place,
-        google: google,
-        star: 4,
-        smoke: 3,
-        people: 1,
-        location: location,
-        games: games,
-        coins: true
-    }
+    coins: boolean | null;
 }
 
 export function Search() {
     const [filter, setFilter] = useState<filterType>({
         name: "",
         place: "all",
-        games: []
+        games: [],
+        coins: null,
     });
+
+    const results: PlaceType[] = JSON.parse(localStorage.getItem("places") as string) || [];
+
+    const navigate = useNavigate();
+
+    const sortType = ["name", "star", "smoke", "people"];
+    const [sort, _setSort] = useState(0);
+    const [direction, setDirection] = useState(true);
+
 
     return (
         <Stack sx={{
             p: 2
         }} spacing={2}>
             <Filter filter={filter} setFilter={(f: SetStateAction<filterType>) => setFilter(f)}/>
-            <Divider flexItem/>
-
-            {tempData.filter(t => {
+            <Divider flexItem>Results</Divider>
+            <Stack alignItems={"end"}>
+                <ButtonGroup variant="contained">
+                    <Button startIcon={<Sort/>}>
+                        {sortType[sort]}
+                    </Button>
+                    <Button sx={{width: 8}} onClick={() => setDirection(!direction)}>
+                        {direction ? <ArrowDownward/> : <ArrowUpward/>}
+                    </Button>
+                </ButtonGroup>
+            </Stack>
+            {Object.values(results).filter(t => {
                 return (
-                    t.name.toLowerCase().includes(filter.name.toLowerCase()) ||
-                    filter.name.toLowerCase().includes(t.name.toLowerCase())
-                )
+                        t.name.toLowerCase().includes(filter.name.toLowerCase()) ||
+                        filter.name.toLowerCase().includes(t.name.toLowerCase())
+                    )
+                    && (t.place === filter.place || filter.place === "all")
+                    && filter.games.every(g => Object.keys(t.games).includes(g))
+                    && (filter.coins === null || filter.coins === t.coins)
             }).map(t => <Card>
-                <CardActionArea>
+                <CardActionArea onClick={() => navigate("/info/" + t.id)}>
                     <CardHeader title={<Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
                         <Typography variant={"h5"}>{t.name}</Typography>
-                        {t.coins ? <MonetizationOn /> : <CreditCard />}
+                        {t.coins ? <MonetizationOn/> : <CreditCard/>}
                         <Rating value={t.star} size={"small"}/>
                         <IconButton onClick={() => window.open(t.google, "_blank")}>
                             <LocationOn/>
@@ -100,9 +90,10 @@ export function Search() {
                     </Stack>} subheader={t.desc} sx={{pb: 0}}/>
                     <CardContent sx={{pt: 0}}>
                         <Stack alignItems={"start"}>
-                            <AvatarGroup max={7} total={Object.values(t.games).reduce((a, b) => a + b)}>
-                                {Object.entries(t.games).map(([k, n]) => Array.from({length: n}, (_, i) => <Avatar
-                                    key={i} alt={k} src={gameAvatar[k]}/>))}
+                            <AvatarGroup max={8} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)}>
+                                {Object.entries(t.games).map(([k, n]) => Array.from({length: n[0]}, (_, i) =>
+                                    <Avatar key={i} alt={k} src={gameAvatar[k]}/>
+                                ))}
                             </AvatarGroup>
                         </Stack>
                         <Stack direction={"row"} justifyContent={"space-between"}>
@@ -110,7 +101,7 @@ export function Search() {
                             <Rating value={t.people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}/>
                         </Stack>
                         <Typography fontSize={"xx-small"}
-                                    color={"textSecondary"}>{JSON.stringify(t.location)}</Typography>
+                                    color={"textSecondary"}>[{t.locationX}, {t.locationY}]</Typography>
                     </CardContent>
                 </CardActionArea>
             </Card>)}
