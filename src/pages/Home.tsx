@@ -4,7 +4,7 @@ import {Login, Search} from "@mui/icons-material";
 
 export function Home() {
 
-    return <Stack spacing={2} alignItems={"center"} justifyContent={"center"} textAlign={"center"} height={"100%"}>
+    return <Stack spacing={2} alignItems={"center"} textAlign={"center"} height={"100%"}>
 
         <Alert sx={{ m: 1 }} severity="warning">此網站仍然WIP, 如果你發現任何bug或有建議，請聯繫IG@whitenightawa.rhythm</Alert>
         <br/>
