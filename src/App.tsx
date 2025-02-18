@@ -25,7 +25,7 @@ function App() {
                     </IconButton>}
                 </Toolbar>
             </AppBar>
-            <Box sx={{mt: "10vh", height: "90vh", overflowY: "auto", width: "100%"}} component="main">
+            <Box sx={{mt: "15vh", height: "85vh", overflowY: "auto", width: "100%"}} component="main">
                 <Outlet/>
             </Box>
         </Box>
