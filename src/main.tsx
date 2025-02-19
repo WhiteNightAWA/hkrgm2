@@ -29,14 +29,12 @@ axios.get("/places/all").then(r => {
         const rs: PlaceType[] = JSON.parse(r.data);
         const places = {};
         rs.map(async (d) => {
+            ["nicks", "games", "links"].forEach(k => {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-            d.nicks = JSON.parse(d.nicks);
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-            d.games = JSON.parse(d.games);
+                d[k] = d[k] !== null ? JSON.parse(d[k]) : [];
+            });
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error

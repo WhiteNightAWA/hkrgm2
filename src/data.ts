@@ -18,7 +18,10 @@ export const gamesMap: StringMap = {
     gc: "GROOVE COASTER",
     db: "DANZBASE",
     diva: "Project DIVA Arcade",
-    de: "DanceEvolution"
+    de: "DanceEvolution",
+    ddr: "Dance Dance Revolution",
+    pnm: "Pop'n music",
+    rb: "Reflec beat"
 };
 
 export const gameAvatar: { [key: string]: string } = {
@@ -44,6 +47,8 @@ export interface PlaceType {
     locationY: number;
     games: { [key: string]: [number, string, number] };
     coins: boolean;
+    links: StringMap;
+    img: string;
 }
 
 export const PlaceList: StringMap = {
