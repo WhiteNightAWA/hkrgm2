@@ -1,43 +1,59 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap");
 
 :root {
-  font-family: "Roboto Slab", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+    font-family: "Roboto Slab", Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
-  height: 100vh;
+    height: 100vh;
 }
 
 body {
-  margin: 0;
-  border: 0;
-  background-color: #121212;
-  height: 100vh;
-  overflow: hidden;
+    margin: 0;
+    border: 0;
+    background-color: #121212;
+    height: 100vh;
+    overflow: hidden;
 }
 
 @keyframes textGradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .background-gradient {
-  background: linear-gradient(-45deg, #ff00cc, #3333ff, #00ff00);
-  background-size: 200% 200%;
-  animation: textGradient 5s ease-in-out infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+    background: linear-gradient(-45deg, #ff00cc, #3333ff, #00ff00);
+    background-size: 200% 200%;
+    animation: textGradient 5s ease-in-out infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.gradient-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(18, 18, 18, 0.6) 50%, rgba(18, 18, 18, 1) 100%);
+    pointer-events: none; /* 允许点击透过渐变 */
 }

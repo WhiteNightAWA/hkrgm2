@@ -1,7 +1,7 @@
 import {
     Avatar,
     Box,
-    Button,
+    Button, ButtonGroup,
     Card,
     CardContent,
     CardHeader,
@@ -14,7 +14,16 @@ import {
     Typography
 } from "@mui/material";
 import {useEffect, useState} from "react";
-import {Close, People, PeopleOutline, SmokeFree, SmokingRooms, Warning} from "@mui/icons-material";
+import {
+    ArrowDownward, ArrowUpward,
+    Close,
+    People,
+    PeopleOutline,
+    SmokeFree,
+    SmokingRooms,
+    Sort,
+    Warning
+} from "@mui/icons-material";
 import {axios} from "../main.tsx";
 import Center from "./Center.tsx";
 
@@ -35,6 +44,11 @@ export default function Comments({id}: { id: string | undefined }) {
     const [open, setOpen] = useState(false);
     const [comments, setComments] = useState<CommentProps[]>([]);
     const [fail, setFail] = useState(false);
+
+    const sortType = ["time", "star", "smoke", "people"];
+    const [sort, setSort] = useState(0);
+    const [direction, setDirection] = useState(true);
+
     useEffect(() => {
         axios.get("/comments/" + id).then(r => {
             if (r.status === 200) {
@@ -43,7 +57,7 @@ export default function Comments({id}: { id: string | undefined }) {
                 setFail(true);
             }
         });
-    }, [])
+    }, [id]);
 
     return (<>
         <Button variant="contained" onClick={() => setOpen(true)}>
@@ -53,12 +67,21 @@ export default function Comments({id}: { id: string | undefined }) {
         <Dialog open={open} onClose={() => setOpen(false)} fullScreen scroll={"paper"}>
             <Paper sx={{mb: 1}}>
                 <Toolbar sx={{justifyContent: "space-between"}}>
-                    <h2>Comments</h2>
+                    <h2>Comments ({comments.length})</h2>
                     <IconButton onClick={() => setOpen(false)}><Close/></IconButton>
                 </Toolbar>
             </Paper>
             <Box overflow={"scroll"}>
-
+                <Stack direction={"row"} justifyContent={"end"} px={2}>
+                    <ButtonGroup size={"small"} variant="contained">
+                        <Button startIcon={<Sort/>} onClick={() => setSort(sort === 3 ? 0 : sort + 1)}>
+                            {sortType[sort]}
+                        </Button>
+                        <Button sx={{width: 8}} onClick={() => setDirection(!direction)}>
+                            {direction ? <ArrowDownward/> : <ArrowUpward/>}
+                        </Button>
+                    </ButtonGroup>
+                </Stack>
                 {fail ? <Center>
                     <Typography variant="h4">
                         Load Comment Fail!
