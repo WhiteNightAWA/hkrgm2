@@ -13,11 +13,11 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 export const axios = new Axios({
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-    baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? "http://localhost:3000" : "https://hkrgm2-backend.vercel.app",
+    baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? "http://localhost:3000" : "https://7d670fca-289a-4fed-ba36-67ff1e352f30.eu-west-1.cloud.genez.io",
     headers: {
         "Content-Type": "application/json"
     },
-    withCredentials: true
+    withCredentials: true,
 })
 
 createRoot(document.getElementById("root")!).render(
