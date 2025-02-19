@@ -2,6 +2,13 @@ interface StringMap {
     [key: string]: string;
 }
 
+export interface UserInterface {
+    username: string;
+    id: string;
+    avatar: string;
+    email: string;
+}
+
 export const gamesMap: StringMap = {
     maimai: "MaiMai",
     maimaidx: "MaiMaiDX",
@@ -50,6 +57,7 @@ export interface PlaceType {
     links: StringMap;
     img: string;
     distance: number | undefined;
+    last_edit: string;
 }
 
 export const PlaceList: StringMap = {

@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import {gamesMap, PlaceType} from "../data.ts";
 import {
-    Add,
     CreditCard,
     Label,
     MonetizationOn,
@@ -26,8 +25,8 @@ import {
     SmokeFree,
     SmokingRooms
 } from "@mui/icons-material";
-import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated";
 import Comments from "../components/Comments.tsx";
+import AddComment from "../components/AddComment.tsx";
 
 export function Info() {
     const {id} = useParams();
@@ -36,8 +35,9 @@ export function Info() {
     const data: PlaceType = (JSON.parse(localStorage.getItem("places") as string) || {})[id];
     console.log(data);
 
+
     return <>
-        <Stack overflow={"auto"}>
+        <Stack overflow={"auto"} mb={5}>
 
             {data.img &&
                 <div style={{position: "relative"}}>
@@ -50,7 +50,7 @@ export function Info() {
 
 
                 <Typography color={"textSecondary"} fontSize={"xx-small"}>
-                    ID: {data.id}
+                    ID: {data.id} | LastUpdate: {data.last_edit}
                 </Typography>
                 <Typography fontSize={"xx-large"}>
                     {data.name}
@@ -124,16 +124,9 @@ export function Info() {
                     <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}/>
                     <Rating value={data.people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}/>
                 </Stack>
+
                 <Comments id={id}/>
-                {
-                    useIsAuthenticated() ?
-                        <Button fullWidth variant={"outlined"} color={"success"} startIcon={<Add/>}>
-                            Add comment
-                        </Button> :
-                        <Button fullWidth variant={"contained"} disabled>
-                            Please Login to add comment
-                        </Button>
-                }
+                <AddComment id={id} />
 
                 <Divider>Others</Divider>
                 {data.links !== null && Object.entries(data.links).map(([key, link]) => <Button

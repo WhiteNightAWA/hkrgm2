@@ -1,6 +1,6 @@
 import {Alert, Button, Stack} from "@mui/material";
 import {Link} from "react-router";
-import {Login, Search} from "@mui/icons-material";
+import {Search} from "@mui/icons-material";
 
 export function Home() {
 
@@ -14,7 +14,6 @@ export function Home() {
         <span>(Hong Kong Music Game Map 精神續作)</span>
         <br/>
         <Link to={"/search"}><Button variant={"contained"} startIcon={<Search />}>Search</Button></Link>
-        <Button disabled variant={"outlined"} startIcon={<Login />}>Login</Button>
     </Stack>
 
 }
