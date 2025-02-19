@@ -33,10 +33,14 @@ export default function LocationRequires({ setLocation, ran }: {
                 <p>We need your location to check which place is near you!</p>
                 <Button color={"success"} size={"small"} variant={"contained"} onClick={() => {
                     requestLocation();
+                    setOpen(false);
                     window.localStorage.setItem("hkrgm2.locationAllow", "true");
                 }}>Allow</Button>
-                <Button size={"small"}>No thanks</Button>
-                <Button color={"error"} size={"small"} variant={"outlined"} onClick={() => window.localStorage.setItem("hkrgm2.locationAllow", "never")}>Never Ask Again</Button>
+                <Button size={"small"} onClick={() => setOpen(false)}>No thanks</Button>
+                <Button color={"error"} size={"small"} variant={"outlined"} onClick={() => {
+                    setOpen(false);
+                    window.localStorage.setItem("hkrgm2.locationAllow", "never")
+                }}>Never Ask Again</Button>
             </Stack>
         </DialogContent>
     </Dialog>)

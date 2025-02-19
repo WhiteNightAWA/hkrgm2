@@ -49,7 +49,7 @@ function App() {
     return <ThemeProvider theme={createTheme({palette: {mode: "dark"}})}>
         <Box sx={{display: "flex"}}>
 
-            <AppBar component="nav">
+            <AppBar component="nav" sx={{ position: "fixed" }}>
                 <Toolbar sx={{justifyContent: "space-between", height: "8vh"}}>
                     <Stack direction={"row"} alignItems={"center"}>
 
