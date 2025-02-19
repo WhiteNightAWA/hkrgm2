@@ -33,7 +33,6 @@ export const gameAvatar: { [key: string]: string } = {
 }
 
 export interface PlaceType {
-    distance: number | undefined;
     id: string;
     name: string;
     desc: string;
@@ -48,6 +47,9 @@ export interface PlaceType {
     locationY: number;
     games: { [key: string]: [number, string, number] };
     coins: boolean;
+    links: StringMap;
+    img: string;
+    distance: number | undefined;
 }
 
 export const PlaceList: StringMap = {
