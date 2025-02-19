@@ -136,7 +136,7 @@ export function Info() {
                 }
 
                 <Divider>Others</Divider>
-                {Object.entries(data.links).map(([key, link]) => <Button
+                {data.links !== null && Object.entries(data.links).map(([key, link]) => <Button
                     variant={"contained"}
                     onClick={() => window.open(link, "_target")}
                     key={key}
