@@ -18,7 +18,9 @@ export const gamesMap: StringMap = {
     gc: "GROOVE COASTER",
     db: "DANZBASE",
     diva: "Project DIVA Arcade",
-    de: "DanceEvolution"
+    de: "DanceEvolution",
+    nostalgia: "Nostalgia",
+    dr: "DANCERUSH"
 };
 
 export const gameAvatar: { [key: string]: string } = {
@@ -31,11 +33,13 @@ export const gameAvatar: { [key: string]: string } = {
 }
 
 export interface PlaceType {
+    distance: number | undefined;
     id: string;
     name: string;
     desc: string;
     nicks: string[];
     place: string;
+    placeD: string;
     google: string;
     star: number,
     smoke: number;
@@ -52,3 +56,9 @@ export const PlaceList: StringMap = {
     kn: "九龍",
     hki: "香港島"
 };
+
+
+export interface Location {
+    latitude: number | null;
+    longitude: number | null;
+}

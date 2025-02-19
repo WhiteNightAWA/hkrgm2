@@ -7,19 +7,18 @@ import {
     CardActionArea,
     CardContent,
     CardHeader,
-    Divider,
-    IconButton,
+    Divider, IconButton,
     Rating,
     Stack,
     Typography
 } from "@mui/material";
-import {SetStateAction, useState} from "react";
+import {SetStateAction, useEffect, useRef, useState} from "react";
 import {Filter} from "../components/Filter.tsx";
 import {
     ArrowDownward,
-    ArrowUpward, Cached,
-    CreditCard,
-    LocationOn,
+    ArrowUpward,
+    Cached,
+    CreditCard, LocationOn,
     MonetizationOn,
     People,
     PeopleOutline,
@@ -29,6 +28,9 @@ import {
 } from "@mui/icons-material";
 import {gameAvatar, PlaceList, PlaceType} from "../data.ts";
 import {useNavigate} from "react-router";
+import LocationRequires from "../components/LocationRequires.tsx";
+import { Location } from "../data";
+
 
 export interface filterType {
     name: string;
@@ -50,6 +52,28 @@ const compareByKey = (key: string, reverse: boolean = false) => (a: Item, b: Ite
     }
 };
 
+function toRadians(degrees: number): number {
+    return degrees * (Math.PI / 180);
+}
+
+function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+    const R = 6371000; // Earth's radius in meters
+
+    const deltaLat = toRadians(lat2 - lat1);
+    const deltaLon = toRadians(lon2 - lon1);
+
+    const a = Math.sin(deltaLat / 2) ** 2 +
+        Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
+        Math.sin(deltaLon / 2) ** 2;
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+
+    // Distance in meters
+    return R * c;
+}
+
+
 export function Search() {
     const [filter, setFilter] = useState<filterType>({
         name: "",
@@ -62,13 +86,19 @@ export function Search() {
 
     const navigate = useNavigate();
 
-    const sortType = ["name", "star", "smoke", "people"];
+    const sortType = ["distance", "name", "star", "smoke", "people"];
     const [sort, setSort] = useState(0);
     const [direction, setDirection] = useState(true);
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    const sortedResult = Object.values(results).sort(compareByKey(sortType[sort], !direction)).filter(t => {
+    const [location, setLocation] = useState<Location>({latitude: null, longitude: null});
+
+    const sortedResult = Object.values(results).filter(t => {
+        if (location.latitude !== null && location.longitude !== null ) {
+            t.distance = Math.round(haversineDistance(location.latitude, location.longitude, t.locationX, t.locationY));
+        } else {
+            t.distance = 0;
+        }
+
         return (
                 t.name.toLowerCase().includes(filter.name.toLowerCase()) ||
                 filter.name.toLowerCase().includes(t.name.toLowerCase())
@@ -76,18 +106,32 @@ export function Search() {
             && (t.place === filter.place || filter.place === "all")
             && filter.games.every(g => Object.keys(t.games).includes(g))
             && (filter.coins === null || filter.coins === t.coins)
-    });
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+    }).sort(compareByKey(sortType[sort], !direction));
+
+    const ref = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+        console.log(ref.current?.style.width);
+    }, [ref])
+
+    const [ran, setRan] = useState<number>(0);
 
     return (
         <Stack sx={{
             px: 2, py: 4
-        }} spacing={2}>
+        }} spacing={2} ref={ref}>
+            <LocationRequires setLocation={setLocation} ran={ran}/>
             <Filter filter={filter} setFilter={(f: SetStateAction<filterType>) => setFilter(f)}/>
             <Divider flexItem>Results ({sortedResult.length})</Divider>
             <Stack direction={"row"} justifyContent={"space-between"}>
-                <Button size={"small"} variant={"outlined"} startIcon={<Cached/>}>Reload</Button>
+                <Button size={"small"} variant={"outlined"} startIcon={<Cached/>} onClick={() => {
+                    setLocation({ longitude: null, latitude: null })
+                    setRan(ran + 1);
+                }}>Reload</Button>
                 <ButtonGroup size={"small"} variant="contained">
-                    <Button startIcon={<Sort/>} onClick={() => setSort(sort === 3 ? 0 : sort + 1)}>
+                    <Button startIcon={<Sort/>} onClick={() => setSort(sort === (sortType.length - 1) ? 0 : sort + 1)}>
                         {sortType[sort]}
                     </Button>
                     <Button sx={{width: 8}} onClick={() => setDirection(!direction)}>
@@ -98,35 +142,43 @@ export function Search() {
             {sortedResult.length === 0 && <center><h1>
                 No Result
             </h1></center>}
-            {sortedResult.map(t => <Card>
-                <CardActionArea onClick={() => navigate("/info/" + t.id)}>
-                    <CardHeader title={t.name} sx={{pb: 0}}/>
-                    <CardContent sx={{pt: 0}}>
-                        <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"} sx={{ lineHeight: 0 }}>
-                            <h2>{PlaceList[t.place]}</h2>
-                            {t.coins ? <MonetizationOn/> : <CreditCard/>}
-                            <Rating value={t.star} />
-                            <IconButton onClick={() => window.open(t.google, "_blank")}>
-                                <LocationOn/>
-                            </IconButton>
-                        </Stack>
-                        <Stack alignItems={"start"}>
-                            <AvatarGroup max={8} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)}>
-                                {Object.entries(t.games).map(([k, n]) => Array.from({length: n[0]}, (_, i) =>
-                                    <Avatar key={i} alt={k} src={gameAvatar[k]}/>
-                                ))}
-                            </AvatarGroup>
-                        </Stack>
-                        <Stack direction={"row"} justifyContent={"space-between"}>
-                            <Rating value={t.smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}/>
-                            <Rating value={t.people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}/>
-                        </Stack>
-                        <Typography fontSize={"xx-small"} color={"textSecondary"}>
-                            {t.id}[{t.locationX}, {t.locationY}]
-                        </Typography>
-                    </CardContent>
-                </CardActionArea>
-            </Card>)}
+            {sortedResult.map(t => {
+                return <Card key={t.name}>
+                    <CardActionArea onClick={() => navigate("/info/" + t.id)}>
+                        <CardHeader title={t.name} sx={{pb: 0}}/>
+                        <CardContent sx={{pt: 0}}>
+                            <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}
+                                   sx={{lineHeight: 0}}>
+                                <h3>{PlaceList[t.place]}-{t.placeD}</h3>
+                                {t.coins ? <MonetizationOn/> : <CreditCard/>}
+                                <Rating value={t.star} size={"small"}/>
+                                {!t.distance ?
+                                    <IconButton onClick={() => window.open(t.google, "_blank")}>
+                                        <LocationOn/>
+                                    </IconButton> : (
+                                        t.distance < 1000 ? <p>{t.distance}M</p> : <p>{(t.distance/1000).toFixed(1)}KM</p>
+                                    )}
+                            </Stack>
+                            <Stack alignItems={"start"}>
+                                <AvatarGroup max={7} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)}>
+                                    {Object.entries(t.games).map(([k, n]) => Array.from({length: n[0]}, (_, i) =>
+                                        <Avatar key={i} alt={k} src={gameAvatar[k]}/>
+                                    ))}
+                                </AvatarGroup>
+                            </Stack>
+                            <Stack direction={"row"} justifyContent={"space-between"}>
+                                <Rating value={t.smoke} icon={<SmokingRooms color={"error"}/>}
+                                        emptyIcon={<SmokeFree/>}/>
+                                <Rating value={t.people} icon={<People color={"secondary"}/>}
+                                        emptyIcon={<PeopleOutline/>}/>
+                            </Stack>
+                            <Typography fontSize={"xx-small"} color={"textSecondary"}>
+                                {t.id}[{t.locationX}, {t.locationY}]
+                            </Typography>
+                        </CardContent>
+                    </CardActionArea>
+                </Card>
+            })}
 
         </Stack>
     );

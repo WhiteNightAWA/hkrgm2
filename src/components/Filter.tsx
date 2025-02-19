@@ -48,7 +48,7 @@ export function Filter({filter, setFilter}: {
                                 label={"地區"}
                                 onChange={(e) => setFilter({...filter, place: e.target.value})}
                             >
-                                {Object.keys(PlaceList).map((key) => <MenuItem value={key}>
+                                {Object.keys(PlaceList).map((key) => <MenuItem value={key} key={key}>
                                     {PlaceList[key]}
                                 </MenuItem>)}
                             </Select>
