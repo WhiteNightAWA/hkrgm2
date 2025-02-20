@@ -1,7 +1,7 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Rating, Stack, TextField} from "@mui/material";
 import {Add, Edit, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
 import {useContext, useEffect, useState} from "react";
-import {UserContext} from "../App.tsx";
+import {PlacesContext, UserContext} from "../App.tsx";
 import {axios} from "../main.tsx";
 
 export default function AddComment({id}: { id: string | undefined }) {
@@ -13,6 +13,8 @@ export default function AddComment({id}: { id: string | undefined }) {
     const [smoke, setSmoke] = useState<number>(0);
     const [people, setPeople] = useState<number>(0);
     const [comments, setComments] = useState<string | null>("");
+
+    const loadData = useContext(PlacesContext).loadData;
 
     useEffect(() => {
         console.log("test");
@@ -68,7 +70,8 @@ export default function AddComment({id}: { id: string | undefined }) {
                         rating, smoke, people, comments
                     }));
                     if (res.status === 200) {
-                        location.reload()
+                        loadData();
+                        setOpen(false);
                     }
                 }}>Summit</Button>
             </DialogActions>

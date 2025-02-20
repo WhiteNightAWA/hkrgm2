@@ -60,6 +60,27 @@ export interface PlaceType {
     last_edit: string;
 }
 
+export interface DBPlaceType {
+    id: string;
+    name: string;
+    desc: string;
+    nicks: string;
+    place: string;
+    placeD: string;
+    google: string;
+    star: number,
+    smoke: number;
+    people: number;
+    locationX: number;
+    locationY: number;
+    games: string;
+    coins: boolean;
+    links: string;
+    img: string;
+    distance: number | undefined;
+    last_edit: string;
+}
+
 export const PlaceList: StringMap = {
     all: "全部",
     nt: "新界",
@@ -71,4 +92,9 @@ export const PlaceList: StringMap = {
 export interface Location {
     latitude: number | null;
     longitude: number | null;
+}
+
+export interface PlacesInterface {
+    data: { [key: string]: PlaceType };
+    loadData: () => void;
 }

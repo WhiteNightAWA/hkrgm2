@@ -12,7 +12,7 @@ import {
     Stack,
     Typography
 } from "@mui/material";
-import {SetStateAction, useEffect, useRef, useState} from "react";
+import {SetStateAction, useContext, useEffect, useRef, useState} from "react";
 import {Filter} from "../components/Filter.tsx";
 import {
     ArrowDownward,
@@ -30,6 +30,7 @@ import {gameAvatar, PlaceList, PlaceType} from "../data.ts";
 import {useNavigate} from "react-router";
 import LocationRequires from "../components/LocationRequires.tsx";
 import { Location } from "../data";
+import {PlacesContext} from "../App.tsx";
 
 
 export interface filterType {
@@ -82,13 +83,15 @@ export function Search() {
         coins: null,
     });
 
-    const results: PlaceType[] = JSON.parse(localStorage.getItem("places") as string) || [];
+    const { data, loadData } = useContext(PlacesContext);
+
+    const results: { [key: string]: PlaceType } = data || {};
 
     const navigate = useNavigate();
 
     const sortType = ["distance", "name", "star", "smoke", "people"];
     const [sort, setSort] = useState(0);
-    const [direction, setDirection] = useState(true);
+    const [direction, setDirection] = useState(false);
 
     const [location, setLocation] = useState<Location>({latitude: null, longitude: null});
 
@@ -116,19 +119,16 @@ export function Search() {
         console.log(ref.current?.style.width);
     }, [ref])
 
-    const [ran, setRan] = useState<number>(0);
-
     return (
         <Stack sx={{
             px: 2, py: 4
         }} spacing={2} ref={ref}>
-            <LocationRequires setLocation={setLocation} ran={ran}/>
+            <LocationRequires setLocation={setLocation} />
             <Filter filter={filter} setFilter={(f: SetStateAction<filterType>) => setFilter(f)}/>
             <Divider flexItem>Results ({sortedResult.length})</Divider>
             <Stack direction={"row"} justifyContent={"space-between"}>
                 <Button size={"small"} variant={"outlined"} startIcon={<Cached/>} onClick={() => {
-                    setLocation({ longitude: null, latitude: null })
-                    setRan(ran + 1);
+                    loadData();
                 }}>Reload</Button>
                 <ButtonGroup size={"small"} variant="contained">
                     <Button startIcon={<Sort/>} onClick={() => setSort(sort === (sortType.length - 1) ? 0 : sort + 1)}>

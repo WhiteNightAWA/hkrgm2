@@ -2,9 +2,8 @@ import {Button, Dialog, DialogContent, DialogTitle, Stack} from "@mui/material";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import { Location } from "../data";
 
-export default function LocationRequires({ setLocation, ran }: {
+export default function LocationRequires({ setLocation }: {
     setLocation: Dispatch<SetStateAction<Location>>;
-    ran: number;
 }) {
     const def = window.localStorage.getItem("hkrgm2.locationAllow");
     const [open, setOpen] = useState(def !== "true" && def !== "never");
@@ -22,7 +21,7 @@ export default function LocationRequires({ setLocation, ran }: {
         if (def === "true") {
             requestLocation();
         }
-    }, [ran])
+    }, [])
 
 
     return (<Dialog open={open} onClose={() => setOpen(false)}>

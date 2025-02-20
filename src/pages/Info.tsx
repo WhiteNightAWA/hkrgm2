@@ -27,16 +27,17 @@ import {
 } from "@mui/icons-material";
 import Comments from "../components/Comments.tsx";
 import AddComment from "../components/AddComment.tsx";
+import {useContext} from "react";
+import {PlacesContext} from "../App.tsx";
 
 export function Info() {
-    const {id} = useParams();
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-    const data: PlaceType = (JSON.parse(localStorage.getItem("places") as string) || {})[id];
-    console.log(data);
+    const id = useParams().id || "";
 
+    const d = useContext(PlacesContext).data || {};
 
-    return <>
+    let data: PlaceType | null = Object.keys(d).includes(id) ? d[id] : null;
+
+    return <>{data === null ? <></> :
         <Stack overflow={"auto"} mb={5}>
 
             {data.img &&
@@ -46,7 +47,7 @@ export function Info() {
                 </div>
             }
 
-            <Stack p={2} spacing={1} sx={data.img ? { mt: -10, zIndex: 9 } : {}}>
+            <Stack p={2} spacing={1} sx={data.img ? {mt: -10, zIndex: 9} : {}}>
 
 
                 <Typography color={"textSecondary"} fontSize={"xx-small"}>
@@ -126,7 +127,7 @@ export function Info() {
                 </Stack>
 
                 <Comments id={id}/>
-                <AddComment id={id} />
+                <AddComment id={id}/>
 
                 <Divider>Others</Divider>
                 {data.links !== null && Object.entries(data.links).map(([key, link]) => <Button
@@ -141,5 +142,6 @@ export function Info() {
                 </Button>
             </Stack>
         </Stack>
+    }
     </>;
 }
