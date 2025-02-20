@@ -23,12 +23,13 @@ export const PlacesContext = createContext<PlacesInterface>({data: {}, loadData:
 function App() {
     const navigator = useNavigate();
     const [loading, setLoading] = useState<boolean>(true);
+    const [offline, setOffline] = useState<boolean>(false);
 
     const loadData = async () => {
         setPlacesData({data: {}, loadData: loadData});
-
         // Update indexDB data
         await axios.get("/places/all").then(r => {
+            console.log(r);
             if (r.status === 200) {
                 const rs: DBPlaceType[] = JSON.parse(r.data);
                 const places: { [key: string]: PlaceType } = {};
@@ -46,7 +47,16 @@ function App() {
                     loadData: loadData,
                     data: places
                 });
+                setLoading(false);
             }
+        }).catch(err => {
+            console.log(err);
+            const bu = localStorage.getItem("places") || "{}";
+            setPlacesData({
+                loadData,
+                data: JSON.parse(bu),
+            });
+            setOffline(true);
             setLoading(false);
         });
     }
@@ -89,7 +99,7 @@ function App() {
                                 <Home/>
                             </IconButton>
                             <Typography variant="h6" color="inherit">
-                                HKRGM2
+                                HKRGM2{offline && " (Offline)"}
                             </Typography>
                         </Stack>
                         {userData === null ?

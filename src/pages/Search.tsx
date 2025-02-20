@@ -1,6 +1,6 @@
 import {
     Avatar,
-    AvatarGroup,
+    AvatarGroup, Badge,
     Button,
     ButtonGroup,
     Card,
@@ -159,11 +159,13 @@ export function Search() {
                                         t.distance < 1000 ? <p>{t.distance}M</p> : <p>{(t.distance/1000).toFixed(1)}KM</p>
                                     )}
                             </Stack>
-                            <Stack alignItems={"start"}>
-                                <AvatarGroup max={7} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)}>
-                                    {Object.entries(t.games).map(([k, n]) => Array.from({length: n[0]}, (_, i) =>
-                                        <Avatar key={i} alt={k} src={gameAvatar[k]}/>
-                                    ))}
+                            <Stack alignItems={"start"} sx={{ mt: 1 }}>
+                                <AvatarGroup max={7} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)} spacing={"medium"}>
+                                    {Object.entries(t.games).map(([k, n]) =>
+                                        <Badge badgeContent={n[0]} anchorOrigin={{ horizontal: "left", vertical: "top" }} color={"primary"}>
+                                            <Avatar key={k} alt={k} src={gameAvatar[k]}/>
+                                        </Badge>
+                                    )}
                                 </AvatarGroup>
                             </Stack>
                             <Stack direction={"row"} justifyContent={"space-between"}>
