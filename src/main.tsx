@@ -13,7 +13,7 @@ import {GoogleOAuthProvider} from "@react-oauth/google";
 export const axios = new Axios({
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-    baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') && false ? "http://localhost:3000" : "https://hkrgm2-backend.vercel.app",
+    baseURL: (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? "http://localhost:3000" : "https://hkrgm2-backend.vercel.app/",
     headers: {
         "Content-Type": "application/json"
     },
