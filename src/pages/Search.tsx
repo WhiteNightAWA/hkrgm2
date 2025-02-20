@@ -151,7 +151,7 @@ export function Search() {
                                    sx={{lineHeight: 0}}>
                                 <h3>{PlaceList[t.place]}-{t.placeD}</h3>
                                 {t.coins ? <MonetizationOn/> : <CreditCard/>}
-                                <Rating value={t.star} size={"small"}/>
+                                {t.star?.toFixed(1)}<Rating value={t.star} size={"small"} />
                                 {!t.distance ?
                                     <IconButton onClick={() => window.open(t.google, "_blank")}>
                                         <LocationOn/>
