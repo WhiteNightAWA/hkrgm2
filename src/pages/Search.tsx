@@ -42,8 +42,8 @@ export interface filterType {
 type Item = { [key: string]: string | number | null };
 
 const compareByKey = (key: string, reverse: boolean = false) => (a: Item, b: Item): number => {
-    const aValue = a[key] === null ? Infinity : a[key];
-    const bValue = b[key] === null ? Infinity : b[key];
+    const aValue = a[key] === null ? 0 : a[key];
+    const bValue = b[key] === null ? 0 : b[key];
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
         return reverse ? bValue.localeCompare(aValue) : aValue.localeCompare(bValue);
@@ -109,7 +109,7 @@ export function Search() {
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-    }).sort(compareByKey(sortType[sort], !direction));
+    }).sort(compareByKey(sortType[sort], direction));
 
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
