@@ -1,5 +1,6 @@
 import {useParams} from "react-router";
 import {
+    Alert,
     Box,
     Button,
     Chip,
@@ -15,7 +16,7 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import {gamesMap, mobileCheck, PlaceType} from "../data.ts";
+import {gamesMap, mobileCheck, PlaceList, PlaceType} from "../data.ts";
 import {CreditCard, Label, MonetizationOn, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
 import Comments from "../components/Comments.tsx";
 import AddComment from "../components/AddComment.tsx";
@@ -46,9 +47,15 @@ export function Info() {
                 <Typography color={"textSecondary"} fontSize={"xx-small"}>
                     ID: {data.id} | LastUpdate: {data.last_edit}
                 </Typography>
-                <Typography fontSize={isMobile ? "xx-large" : "xxx-large"}>
+                {data.check !== 1 && <Alert severity={"warning"}>
+                    此機舖內容尚未被證實, 資料僅供參考
+                </Alert>}
+                <Typography variant={isMobile ? "h4" : "h1"}>
                     {data.name}
                 </Typography>
+                <h3>
+                    {PlaceList[data.place]}-{data.placeD}
+                </h3>
                 <Box sx={{"*": {m: 0.25}}}>
                     {
                         data.coins

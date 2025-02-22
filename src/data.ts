@@ -58,6 +58,7 @@ export interface PlaceType {
     img: string;
     distance: number | undefined;
     last_edit: string;
+    check: number;
 }
 
 export interface DBPlaceType {
