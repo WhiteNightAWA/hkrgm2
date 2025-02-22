@@ -15,16 +15,8 @@ import {
     TableRow,
     Typography
 } from "@mui/material";
-import {gamesMap, PlaceType} from "../data.ts";
-import {
-    CreditCard,
-    Label,
-    MonetizationOn,
-    People,
-    PeopleOutline,
-    SmokeFree,
-    SmokingRooms
-} from "@mui/icons-material";
+import {gamesMap, mobileCheck, PlaceType} from "../data.ts";
+import {CreditCard, Label, MonetizationOn, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
 import Comments from "../components/Comments.tsx";
 import AddComment from "../components/AddComment.tsx";
 import {useContext} from "react";
@@ -35,7 +27,9 @@ export function Info() {
 
     const d = useContext(PlacesContext).data || {};
 
-    let data: PlaceType | null = Object.keys(d).includes(id) ? d[id] : null;
+    const data: PlaceType | null = Object.keys(d).includes(id) ? d[id] : null;
+
+    const isMobile = mobileCheck();
 
     return <>{data === null ? <></> :
         <Stack overflow={"auto"} mb={5}>
@@ -49,11 +43,10 @@ export function Info() {
 
             <Stack p={2} spacing={1} sx={data.img ? {mt: -10, zIndex: 9} : {}}>
 
-
                 <Typography color={"textSecondary"} fontSize={"xx-small"}>
                     ID: {data.id} | LastUpdate: {data.last_edit}
                 </Typography>
-                <Typography fontSize={"xx-large"}>
+                <Typography fontSize={isMobile ? "xx-large" : "xxx-large"}>
                     {data.name}
                 </Typography>
                 <Box sx={{"*": {m: 0.25}}}>
@@ -68,78 +61,93 @@ export function Info() {
                     {data.desc}
                 </Typography>
 
-                <Divider>Map</Divider>
-                {/*<Button variant={"contained"} endIcon={<Launch/>} onClick={() => window.open(data.google, "_blank")}>Google Map</Button>*/}
-                <iframe
-                    src={data.google}
-                    loading={"lazy"}
-                    referrerPolicy="no-referrer-when-downgrade"
-                    height={200}
-                />
-                <Divider>Arcades</Divider>
+                <Stack direction={isMobile ? "column" : "row"} spacing={2}>
 
-                <TableContainer component={Paper}>
-                    <Table size={"small"}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell>name</TableCell>
-                                <TableCell>version</TableCell>
-                                <TableCell>count</TableCell>
-                                <TableCell>price</TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody sx={{
-                            "tr": {
-                                transition: "background-color 0.25s",
-                                whiteSpace: "nowrap",
-                                "&:hover": {
-                                    "backgroundColor": "rgba(255,255,255,0.25)"
-                                }
-                            }
-                        }}>
-                            {Object.entries(data.games).map(([name, d]) => <TableRow key={name}>
-                                <TableCell>{gamesMap[name]}</TableCell>
-                                <TableCell>{d[1]}</TableCell>
-                                <TableCell>{d[0]}</TableCell>
-                                <TableCell>${d[2]}</TableCell>
-                            </TableRow>)}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <Button fullWidth variant={"outlined"}>
-                    Map of Machines
-                </Button>
+                    <Stack width={!isMobile ? "70%" : "100&"} spacing={2}>
+                        <Divider>Map</Divider>
+                        {/*<Button variant={"contained"} endIcon={<Launch/>} onClick={() => window.open(data.google, "_blank")}>Google Map</Button>*/}
+                        <iframe
+                            src={data.google}
+                            loading={"lazy"}
+                            referrerPolicy="no-referrer-when-downgrade"
+                            height={isMobile ? 200 : 500}
+                            width="100%"
+                        />
+                        <Divider>Arcades</Divider>
 
-                <Divider>Comments</Divider>
+                        <TableContainer component={Paper}>
+                            <Table size={"small"}>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>name</TableCell>
+                                        <TableCell>version</TableCell>
+                                        <TableCell>count</TableCell>
+                                        <TableCell>price</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody sx={{
+                                    "tr": {
+                                        transition: "background-color 0.25s",
+                                        whiteSpace: "nowrap",
+                                        "&:hover": {
+                                            "backgroundColor": "rgba(255,255,255,0.25)"
+                                        }
+                                    }
+                                }}>
+                                    {Object.entries(data.games).map(([name, d]) => <TableRow key={name}>
+                                        <TableCell>{gamesMap[name]}</TableCell>
+                                        <TableCell>{d[1]}</TableCell>
+                                        <TableCell>{d[0]}</TableCell>
+                                        <TableCell>${d[2]}</TableCell>
+                                    </TableRow>)}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <Button fullWidth variant={"outlined"}>
+                            Map of Machines
+                        </Button>
+                    </Stack>
+                    <Stack spacing={2}>
+                        <Stack spacing={1}>
 
-                <Stack justifyContent={"space-around"} alignItems={"center"} direction={"row"}>
-                    <h1>{typeof data.star === "number" ? data.star?.toFixed(1) : 0}</h1>
-                    <Rating
-                        size={"large"}
-                        value={data.star}
-                        readOnly
-                    />
-                    <p>(?)</p>
+                            <Divider>Comments</Divider>
+
+                            <Stack justifyContent={"space-around"} alignItems={"center"} direction={"row"}>
+                                <h1>{typeof data.star === "number" ? data.star?.toFixed(1) : 0}</h1>
+                                <Rating
+                                    size={"large"}
+                                    value={data.star}
+                                    readOnly
+                                />
+                                <p>(?)</p>
+                            </Stack>
+                            <Stack direction={"row"} justifyContent={"space-around"}>
+                                <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>}
+                                        emptyIcon={<SmokeFree/>}/>
+                                <Rating value={data.people} icon={<People color={"secondary"}/>}
+                                        emptyIcon={<PeopleOutline/>}/>
+                            </Stack>
+
+                            <Comments id={id}/>
+                            <AddComment id={id}/>
+
+                        </Stack>
+                        <Stack spacing={1}>
+
+                            <Divider>Others</Divider>
+                            {data.links !== null && Object.entries(data.links).map(([key, link]) => <Button
+                                variant={"contained"}
+                                onClick={() => window.open(link, "_target")}
+                                key={key}
+                            >
+                                {key}
+                            </Button>)}
+                            <Button fullWidth variant={"outlined"}>
+                                Report problems
+                            </Button>
+                        </Stack>
+                    </Stack>
                 </Stack>
-                <Stack direction={"row"} justifyContent={"space-around"}>
-                    <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}/>
-                    <Rating value={data.people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}/>
-                </Stack>
-
-                <Comments id={id}/>
-                <AddComment id={id}/>
-
-                <Divider>Others</Divider>
-                {data.links !== null && Object.entries(data.links).map(([key, link]) => <Button
-                    variant={"contained"}
-                    onClick={() => window.open(link, "_target")}
-                    key={key}
-                >
-                    {key}
-                </Button>)}
-                <Button fullWidth variant={"outlined"}>
-                    Report problems
-                </Button>
             </Stack>
         </Stack>
     }

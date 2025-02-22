@@ -18,7 +18,8 @@ export const axios = new Axios({
         "Content-Type": "application/json"
     },
     withCredentials: true,
-})
+});
+
 
 createRoot(document.getElementById("root")!).render(
     <GoogleOAuthProvider clientId={"522175218345-hno36f77qm86nao4npa7ebd8k3s62v20.apps.googleusercontent.com"}>

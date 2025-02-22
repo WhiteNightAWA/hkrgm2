@@ -1,13 +1,15 @@
 import {
     Avatar,
-    AvatarGroup, Badge,
+    AvatarGroup,
+    Badge,
     Button,
     ButtonGroup,
     Card,
     CardActionArea,
     CardContent,
     CardHeader,
-    Divider, IconButton,
+    Divider, Grid2,
+    IconButton,
     Rating,
     Stack,
     Typography
@@ -18,7 +20,8 @@ import {
     ArrowDownward,
     ArrowUpward,
     Cached,
-    CreditCard, LocationOn,
+    CreditCard,
+    LocationOn,
     MonetizationOn,
     People,
     PeopleOutline,
@@ -26,10 +29,10 @@ import {
     SmokingRooms,
     Sort
 } from "@mui/icons-material";
-import {gameAvatar, PlaceList, PlaceType} from "../data.ts";
+import {gameAvatar, mobileCheck, PlaceList, PlaceType} from "../data.ts";
 import {useNavigate} from "react-router";
 import LocationRequires from "../components/LocationRequires.tsx";
-import { Location } from "../data";
+import {Location} from "../data";
 import {PlacesContext} from "../App.tsx";
 
 
@@ -83,7 +86,7 @@ export function Search() {
         coins: null,
     });
 
-    const { data, loadData } = useContext(PlacesContext);
+    const {data, loadData} = useContext(PlacesContext);
 
     const results: { [key: string]: PlaceType } = data || {};
 
@@ -96,7 +99,7 @@ export function Search() {
     const [location, setLocation] = useState<Location>({latitude: null, longitude: null});
 
     const sortedResult = Object.values(results).filter(t => {
-        if (location.latitude !== null && location.longitude !== null ) {
+        if (location.latitude !== null && location.longitude !== null) {
             t.distance = Math.round(haversineDistance(location.latitude, location.longitude, t.locationX, t.locationY));
         } else {
             t.distance = 0;
@@ -123,7 +126,7 @@ export function Search() {
         <Stack sx={{
             px: 2, py: 4
         }} spacing={2} ref={ref}>
-            <LocationRequires setLocation={setLocation} />
+            <LocationRequires setLocation={setLocation}/>
             <Filter filter={filter} setFilter={(f: SetStateAction<filterType>) => setFilter(f)}/>
             <Divider flexItem>Results ({sortedResult.length})</Divider>
             <Stack direction={"row"} justifyContent={"space-between"}>
@@ -139,48 +142,63 @@ export function Search() {
                     </Button>
                 </ButtonGroup>
             </Stack>
+
             {sortedResult.length === 0 && <center><h1>
                 No Result
             </h1></center>}
-            {sortedResult.map(t => {
-                return <Card key={t.name}>
-                    <CardActionArea onClick={() => navigate("/info/" + t.id)}>
-                        <CardHeader title={t.name} sx={{pb: 0}}/>
-                        <CardContent sx={{pt: 0}}>
-                            <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}
-                                   sx={{lineHeight: 0}}>
-                                <h3>{PlaceList[t.place]}-{t.placeD}</h3>
-                                {t.coins ? <MonetizationOn/> : <CreditCard/>}
-                                {t.star?.toFixed(1)}<Rating value={t.star} size={"small"} />
-                                {!t.distance ?
-                                    <IconButton onClick={() => window.open(t.google, "_blank")}>
-                                        <LocationOn/>
-                                    </IconButton> : (
-                                        t.distance < 1000 ? <p>{t.distance}M</p> : <p>{(t.distance/1000).toFixed(1)}KM</p>
-                                    )}
-                            </Stack>
-                            <Stack alignItems={"start"} sx={{ mt: 1 }}>
-                                <AvatarGroup max={7} total={Object.values(t.games).reduce((a, b) => a + b[0], 0)} spacing={"medium"}>
-                                    {Object.entries(t.games).map(([k, n]) =>
-                                        <Badge badgeContent={n[0]} anchorOrigin={{ horizontal: "left", vertical: "top" }} color={"primary"}>
-                                            <Avatar key={k} alt={k} src={gameAvatar[k]}/>
-                                        </Badge>
-                                    )}
-                                </AvatarGroup>
-                            </Stack>
-                            <Stack direction={"row"} justifyContent={"space-between"}>
-                                <Rating value={t.smoke} icon={<SmokingRooms color={"error"}/>}
-                                        emptyIcon={<SmokeFree/>}/>
-                                <Rating value={t.people} icon={<People color={"secondary"}/>}
-                                        emptyIcon={<PeopleOutline/>}/>
-                            </Stack>
-                            <Typography fontSize={"xx-small"} color={"textSecondary"}>
-                                {t.id}[{t.locationX}, {t.locationY}]
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
-                </Card>
-            })}
+            {(() => {
+                const results = sortedResult.map(t => {
+                    return <Card key={t.name}>
+                        <CardActionArea onClick={() => navigate("/info/" + t.id)}>
+                            <CardHeader title={t.name} sx={{pb: 0}}/>
+                            <CardContent sx={{pt: 0}}>
+                                <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}
+                                       sx={{lineHeight: 0}}>
+                                    <h3>{PlaceList[t.place]}-{t.placeD}</h3>
+                                    {t.coins ? <MonetizationOn/> : <CreditCard/>}
+                                    {t.star?.toFixed(1)}<Rating value={t.star} size={"small"} readOnly/>
+                                    {!t.distance ?
+                                        <IconButton onClick={() => window.open(t.google, "_blank")}>
+                                            <LocationOn/>
+                                        </IconButton> : (
+                                            t.distance < 1000 ? <p>{t.distance}M</p> :
+                                                <p>{(t.distance / 1000).toFixed(1)}KM</p>
+                                        )}
+                                </Stack>
+                                <Stack alignItems={"start"} sx={{mt: 1}}>
+                                    <AvatarGroup max={7} total={Object.keys(t.games).length}
+                                                 spacing={"medium"}>
+                                        {Object.entries(t.games).map(([k, n]) =>
+                                            <Badge badgeContent={n[0]}
+                                                   anchorOrigin={{horizontal: "left", vertical: "top"}}
+                                                   color={"primary"}>
+                                                <Avatar key={k} alt={k} src={gameAvatar[k]}/>
+                                            </Badge>
+                                        )}
+                                    </AvatarGroup>
+                                </Stack>
+                                <Stack direction={"row"} justifyContent={"space-between"}>
+                                    <Rating value={t.smoke} icon={<SmokingRooms color={"error"}/>}
+                                            emptyIcon={<SmokeFree/>}/>
+                                    <Rating value={t.people} icon={<People color={"secondary"}/>}
+                                            emptyIcon={<PeopleOutline/>}/>
+                                </Stack>
+                                <Typography fontSize={"xx-small"} color={"textSecondary"}>
+                                    {t.id}[{t.locationX}, {t.locationY}]
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                })
+
+                return mobileCheck() ? <Stack spacing={2}>
+                    {...results}
+                </Stack> : <Grid2 container spacing={2}>
+                    {results.map(r => <Grid2 size={4}>
+                        {r}
+                    </Grid2>)}
+                </Grid2>
+            })()}
 
         </Stack>
     );

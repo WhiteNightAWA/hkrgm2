@@ -1,11 +1,11 @@
 import {
     Avatar,
-    Box,
-    Button, ButtonGroup,
+    Button,
+    ButtonGroup,
     Card,
     CardContent,
     CardHeader,
-    Dialog,
+    Dialog, DialogContent,
     IconButton,
     Paper,
     Rating,
@@ -15,7 +15,8 @@ import {
 } from "@mui/material";
 import {useEffect, useState} from "react";
 import {
-    ArrowDownward, ArrowUpward,
+    ArrowDownward,
+    ArrowUpward,
     Close,
     People,
     PeopleOutline,
@@ -26,6 +27,7 @@ import {
 } from "@mui/icons-material";
 import {axios} from "../main.tsx";
 import Center from "./Center.tsx";
+import {mobileCheck} from "../data.ts";
 
 interface CommentProps {
     id: number;
@@ -48,6 +50,7 @@ export default function Comments({id}: { id: string | undefined }) {
     const sortType = ["time", "star", "smoke", "people"];
     const [sort, setSort] = useState(0);
     const [direction, setDirection] = useState(true);
+    const isMobile = mobileCheck();
 
     useEffect(() => {
         axios.get("/comments/" + id).then(r => {
@@ -64,15 +67,16 @@ export default function Comments({id}: { id: string | undefined }) {
             Check Comments
         </Button>
 
-        <Dialog open={open} onClose={() => setOpen(false)} fullScreen scroll={"paper"}>
+        <Dialog open={open} onClose={() => setOpen(false)} fullScreen={isMobile} maxWidth={"md"}
+                fullWidth scroll={"paper"}>
             <Paper sx={{mb: 1}}>
                 <Toolbar sx={{justifyContent: "space-between"}}>
                     <h2>Comments ({comments.length})</h2>
                     <IconButton onClick={() => setOpen(false)}><Close/></IconButton>
                 </Toolbar>
             </Paper>
-            <Box overflow={"scroll"}>
-                <Stack direction={"row"} justifyContent={"end"} px={2}>
+            <DialogContent sx={{minHeight: "50vh"}}>
+                <Stack direction={"row"} justifyContent={"end"}>
                     <ButtonGroup size={"small"} variant="contained">
                         <Button startIcon={<Sort/>} onClick={() => setSort(sort === 3 ? 0 : sort + 1)}>
                             {sortType[sort]}
@@ -111,7 +115,7 @@ export default function Comments({id}: { id: string | undefined }) {
                         </CardContent>
                     </Card>)}
                 </Stack>}
-            </Box>
+            </DialogContent>
         </Dialog>
     </>)
 }
