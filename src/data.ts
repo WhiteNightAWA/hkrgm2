@@ -8,6 +8,17 @@ export interface UserInterface {
     avatar: string;
     email: string;
 }
+export const MachineProblemsListTran: StringMap = {
+    mon: "螢幕",
+    touch: "觸控",
+    button: "掣",
+    jack: "耳機窿",
+    light: "LED",
+    screen: "螢幕(上面)"
+}
+export const MachineProblemsList: { [key: string]: string[] } = {
+    "maimaidx": ["mon", "touch", "button", "jack", "light", "screen"]
+}
 
 export const gamesMap: StringMap = {
     maimai: "MaiMai",
@@ -47,7 +58,7 @@ export interface PlaceType {
     place: string;
     placeD: string;
     google: string;
-    star: number,
+    star: number | null;
     smoke: number;
     people: number;
     locationX: number;

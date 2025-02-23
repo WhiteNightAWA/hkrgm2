@@ -3,8 +3,8 @@ import {
     Alert,
     Box,
     Button,
-    Chip,
-    Divider,
+    Chip, Dialog, DialogTitle,
+    Divider, List, ListItemButton,
     Paper,
     Rating,
     Stack,
@@ -20,8 +20,10 @@ import {gamesMap, mobileCheck, PlaceList, PlaceType} from "../data.ts";
 import {CreditCard, Label, MonetizationOn, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
 import Comments from "../components/Comments.tsx";
 import AddComment from "../components/AddComment.tsx";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {PlacesContext} from "../App.tsx";
+import Map, {tempMacDeData} from "../components/Map.tsx";
+import MachineDetails from "../components/MachineDetails.tsx";
 
 export function Info() {
     const id = useParams().id || "";
@@ -31,6 +33,8 @@ export function Info() {
     const data: PlaceType | null = Object.keys(d).includes(id) ? d[id] : null;
 
     const isMobile = mobileCheck();
+
+    const [selected, setSelected] = useState<string>("");
 
     return <>{data === null ? <></> :
         <Stack overflow={"auto"} mb={5}>
@@ -68,9 +72,9 @@ export function Info() {
                     {data.desc}
                 </Typography>
 
-                <Stack direction={isMobile ? "column" : "row"} spacing={2}>
+                <Stack direction={isMobile ? "column" : "row"} spacing={2} justifyContent={"space-around"}>
 
-                    <Stack width={!isMobile ? "70%" : "100&"} spacing={2}>
+                    <Stack width={!isMobile ? "65%" : "100%"} spacing={2}>
                         <Divider>Map</Divider>
                         {/*<Button variant={"contained"} endIcon={<Launch/>} onClick={() => window.open(data.google, "_blank")}>Google Map</Button>*/}
                         <iframe
@@ -101,7 +105,8 @@ export function Info() {
                                         }
                                     }
                                 }}>
-                                    {Object.entries(data.games).map(([name, d]) => <TableRow key={name}>
+                                    {Object.entries(data.games).map(([name, d]) => <TableRow key={name}
+                                                                                             onClick={() => setSelected(name)}>
                                         <TableCell>{gamesMap[name]}</TableCell>
                                         <TableCell>{d[1]}</TableCell>
                                         <TableCell>{d[0]}</TableCell>
@@ -110,11 +115,23 @@ export function Info() {
                                 </TableBody>
                             </Table>
                         </TableContainer>
-                        <Button fullWidth variant={"outlined"}>
-                            Map of Machines
-                        </Button>
+                        <Map/>
                     </Stack>
-                    <Stack spacing={2}>
+                    <Dialog open={selected !== ""} onClose={() => setSelected("")} fullWidth maxWidth={"md"}>
+                        <Alert severity={"error"}>仍在開發中</Alert>
+                        <DialogTitle>{gamesMap[selected]} List</DialogTitle>
+                        <List>
+                            {Object.values(tempMacDeData).filter(i => i.type === selected).map(m =>
+                                <MachineDetails data={m} openlabel={m.label}>
+                                    <ListItemButton>
+                                        {m.label}
+                                    </ListItemButton>
+                                </MachineDetails>
+                            )}
+                        </List>
+                    </Dialog>
+
+                    <Stack width={!isMobile ? "25%" : "100%"} spacing={2}>
                         <Stack spacing={1}>
 
                             <Divider>Comments</Divider>

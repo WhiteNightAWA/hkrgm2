@@ -4,21 +4,25 @@ import {
     Box, Button,
     CircularProgress,
     createTheme,
-    IconButton,
+    IconButton, ListItemIcon, Menu, MenuItem, MenuList,
     Stack,
     ThemeProvider,
     Toolbar,
     Typography
 } from "@mui/material";
-import {Home} from "@mui/icons-material";
+import {Home, Logout, Settings} from "@mui/icons-material";
 import {Outlet, useNavigate} from "react-router";
 import {createContext, useEffect, useState} from "react";
-import {DBPlaceType, PlacesInterface, PlaceType, UserInterface} from "./data.ts";
+import {DBPlaceType, mobileCheck, PlacesInterface, PlaceType, UserInterface} from "./data.ts";
 import {axios} from "./main.tsx";
 import {useGoogleLogin} from "@react-oauth/google";
 
 export const UserContext = createContext<UserInterface | null>(null);
-export const PlacesContext = createContext<PlacesInterface>({data: {}, loadData: () => {return} });
+export const PlacesContext = createContext<PlacesInterface>({
+    data: {}, loadData: () => {
+        return
+    }
+});
 
 function App() {
     const navigator = useNavigate();
@@ -80,6 +84,8 @@ function App() {
         loadData: loadData
     });
 
+    const [openMenu, setOpenMenu] = useState<null | HTMLElement>(null);
+
     useEffect(() => {
         (async () => {
             await loadData();
@@ -87,7 +93,9 @@ function App() {
             console.log(data);
             setUserData(JSON.parse(data.data));
         })()
-    }, [])
+    }, []);
+
+    const isMobile: boolean = mobileCheck();
 
     return <UserContext.Provider value={userData}>
         <PlacesContext.Provider value={placesData}>
@@ -117,12 +125,56 @@ function App() {
                                       d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"></path>
                             </svg>}>
                                 Login
-                            </Button> : <Avatar src={userData.avatar} alt={userData.username}/>}
+                            </Button> : <IconButton onClick={(e) => setOpenMenu(e.currentTarget)}>
+                                <Avatar src={userData.avatar} alt={userData.username}/>
+                            </IconButton>}
                     </Toolbar>
                 </AppBar>
+
+                <Menu
+                    open={openMenu !== null}
+                    anchorEl={openMenu}
+                    onClose={() => setOpenMenu(null)}
+                    anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                    }}
+                >
+                    <MenuList dense={isMobile}>
+
+                        <Stack direction={"row"} m={1} spacing={4} px={1}>
+                            <Stack>
+                                <Typography color={"textSecondary"}>
+                                    Welcome,
+                                </Typography>
+                                <Typography fontSize={"large"}>
+                                    {userData?.username}
+                                </Typography>
+                            </Stack>
+                            <Avatar src={userData?.avatar} alt={userData?.username}/>
+                        </Stack>
+                        <MenuItem>
+                            <ListItemIcon>
+                                <Settings />
+                            </ListItemIcon>
+                            Settings
+                        </MenuItem>
+                        <MenuItem onClick={async () => {
+                            await axios.post("/logout");
+                            window.location.reload();
+                        }}>
+                            <ListItemIcon >
+                                <Logout color={"error"}/>
+                            </ListItemIcon>
+                            Logout
+                        </MenuItem>
+
+                    </MenuList>
+                </Menu>
+
                 <Box sx={{mt: "8vh", height: "92vh", overflowY: "auto", width: "100%", position: "absolute"}}
                      component="main">
-                    {!loading && <Outlet />}
+                    {!loading && <Outlet/>}
                 </Box>
                 <Backdrop open={loading} sx={{zIndex: 9999}}>
                     <Stack alignItems={"center"}>
