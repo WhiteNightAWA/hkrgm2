@@ -8,6 +8,7 @@ import {Info} from "./pages/Info.tsx";
 import "./styles/index.css";
 import {Axios} from "axios";
 import {GoogleOAuthProvider} from "@react-oauth/google";
+import Announcement from "./pages/Announcement.tsx";
 
 
 export const axios = new Axios({
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path={"/"} element={<App/>}>
                     <Route index element={<Home/>}/>
                     <Route path={"/search"} element={<Search/>}/>
+                    <Route path={"/announcement"} element={<Announcement />}/>
                     <Route path={"/info/:id"} element={<Info/>}/>
                 </Route>
             </Routes>
