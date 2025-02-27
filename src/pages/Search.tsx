@@ -156,7 +156,8 @@ export function Search() {
                                        sx={{lineHeight: 0}}>
                                     <h3>{PlaceList[t.place]}-{t.placeD}</h3>
                                     {t.coins ? <MonetizationOn/> : <CreditCard/>}
-                                    {t.star?.toFixed(1)}<Rating value={t.star} size={"small"} readOnly/>
+                                    {t.star?.toFixed(1)}
+                                    {t.star !== null && <Rating value={t.star} size={"small"} readOnly precision={0.1} />}
                                     {!t.distance ?
                                         <IconButton onClick={() => window.open(t.google, "_blank")}>
                                             <LocationOn/>
@@ -177,12 +178,13 @@ export function Search() {
                                         )}
                                     </AvatarGroup>
                                 </Stack>
-                                <Stack direction={"row"} justifyContent={"space-between"}>
+
+                                {t.star !== null && <Stack direction={"row"} justifyContent={"space-between"}>
                                     <Rating value={t.smoke} icon={<SmokingRooms color={"error"}/>}
-                                            emptyIcon={<SmokeFree/>}/>
+                                            emptyIcon={<SmokeFree/>} readOnly precision={0.1}/>
                                     <Rating value={t.people} icon={<People color={"secondary"}/>}
-                                            emptyIcon={<PeopleOutline/>}/>
-                                </Stack>
+                                            emptyIcon={<PeopleOutline/>} readOnly precision={0.1}/>
+                                </Stack>}
                                 <Typography fontSize={"xx-small"} color={"textSecondary"}>
                                     {t.id}[{t.locationX}, {t.locationY}]
                                 </Typography>

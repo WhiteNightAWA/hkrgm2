@@ -142,14 +142,17 @@ export function Info() {
                                     size={"large"}
                                     value={data.star}
                                     readOnly
+                                    precision={0.1}
                                 />
                                 <p>(?)</p>
                             </Stack>
                             <Stack direction={"row"} justifyContent={"space-around"}>
                                 <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>}
-                                        emptyIcon={<SmokeFree/>}/>
+                                        precision={0.1}
+                                        emptyIcon={<SmokeFree/>} readOnly />
                                 <Rating value={data.people} icon={<People color={"secondary"}/>}
-                                        emptyIcon={<PeopleOutline/>}/>
+                                        precision={0.1}
+                                        emptyIcon={<PeopleOutline/>} readOnly/>
                             </Stack>
 
                             <Comments id={id}/>
