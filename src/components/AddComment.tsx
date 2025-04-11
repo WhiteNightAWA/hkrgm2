@@ -3,6 +3,7 @@ import {Add, Edit, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/ic
 import {useContext, useEffect, useState} from "react";
 import {PlacesContext, UserContext} from "../App.tsx";
 import {axios} from "../main.tsx";
+import {mobileCheck} from "../data.ts";
 
 export default function AddComment({id}: { id: string | undefined }) {
     const userData = useContext(UserContext);
@@ -34,6 +35,8 @@ export default function AddComment({id}: { id: string | undefined }) {
         })()
     }, [userData]);
 
+    const isMobile = mobileCheck();
+
     return <>
         {userData !== null ?
             <Button onClick={() => setOpen(true)} fullWidth variant={"outlined"} color={"success"}
@@ -48,11 +51,13 @@ export default function AddComment({id}: { id: string | undefined }) {
             <DialogTitle>Add Comment</DialogTitle>
             <DialogContent>
                 <Stack alignItems={"center"} spacing={1}>
-                    <Rating value={rating} size={"large"} onChange={(_e, v) => setRating(v ? v : 0)}/>
-                    <Rating value={smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}
-                            onChange={(_e, v) => setSmoke(v ? v : 0)}/>
-                    <Rating value={people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}
-                            onChange={(_e, v) => setPeople(v ? v : 0)}/>
+                    <Stack direction={isMobile ? "column" : "row"} spacing={isMobile ? 0 : 2} alignItems={"center"}>
+                        <Rating value={rating} size={"large"} onChange={(_e, v) => setRating(v ? v : 0)}/>
+                        <Rating value={smoke} icon={<SmokingRooms color={"error"}/>} emptyIcon={<SmokeFree/>}
+                                onChange={(_e, v) => setSmoke(v ? v : 0)}/>
+                        <Rating value={people} icon={<People color={"secondary"}/>} emptyIcon={<PeopleOutline/>}
+                                onChange={(_e, v) => setPeople(v ? v : 0)}/>
+                    </Stack>
                     <TextField
                         fullWidth
                         value={comments}

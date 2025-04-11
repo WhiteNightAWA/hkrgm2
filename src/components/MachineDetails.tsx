@@ -33,7 +33,7 @@ export default function MachineDetails({children, data, openlabel}: {
             {children}
 
         </div>
-        <Dialog open={open} onClose={() => setOpen(false)} maxWidth={"lg"} fullWidth>
+        <Dialog open={open} onClose={() => setOpen(false)} maxWidth={"md"} fullWidth>
             <Alert severity={"error"}>仍在開發中</Alert>
             <DialogTitle>{data.label} - {gamesMap[data.type]}</DialogTitle>
             <DialogContent>
