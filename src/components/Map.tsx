@@ -1,8 +1,10 @@
 import {Alert, Badge, Box, Button, Dialog, DialogContent, Stack} from "@mui/material";
-import {useState} from "react";
+import {ReactElement, useState} from "react";
 import {blue, green, orange, purple, red} from "@mui/material/colors";
 import {gamesMap} from "../data.ts";
 import MachineDetails from "./MachineDetails.tsx";
+import BGBox from "../ass/background box.png";
+import {Logout} from "@mui/icons-material";
 
 const tempData: { [key: string]: { size: number[], color: string } } = {
     "maimaidx": {
@@ -28,7 +30,7 @@ const tempData: { [key: string]: { size: number[], color: string } } = {
     "chunithm": {
         size: [89, 96, 232],
         color: orange[600]
-    }
+    },
 }
 
 export interface MachineDetailsType {
@@ -38,6 +40,17 @@ export interface MachineDetailsType {
     problems?: { [key: string]: string },
     version?: string;
     price?: number;
+    unclickable?: boolean;
+    size?: {
+        width: number,
+        height: number
+    }
+}
+
+const iconMap: {
+    [key: string]: ReactElement
+} = {
+    "exit": <Logout />
 }
 
 export const tempMacDeData: {
@@ -58,9 +71,17 @@ export const tempMacDeData: {
     "13": {type: "wacca", label: "W2", place: "goldG"},
     "14": {type: "chunithm", label: "C1", place: "goldG"},
     "15": {type: "chunithm", label: "C2", place: "goldG"},
+    "io1": {type: "icon", label: "exit", place: "goldG", unclickable: true, size: {width: 1, height: 2}},
 }
 
 const tempMacData = [
+    {
+        pos: [0, 10],
+        row: false,
+        data: [
+            "io1"
+        ]
+    },
     {
         pos: [0, 0],
         row: false,
@@ -127,11 +148,10 @@ export default function Map({ highlight } : {highlight?: string}) {
 
                 <Box sx={{
                     backgroundSize: "50px 50px",
-                    backgroundImage: "linear-gradient(to right, grey 1px, transparent 1px),linear-gradient(to bottom, grey 1px, transparent 1px);",
-                    boxShadow: "inset 0 0 0 5px white",
+                    backgroundImage: `url(${BGBox})`,
                     position: "relative",
-                    height: `${5 * squreSize}px`,
-                    width: `${5 * squreSize}px`
+                    height: `${14 * squreSize}px`,
+                    width: `${13 * squreSize}px`
                 }}>
                     {tempMacData.map(row => <Stack sx={{
                         position: "absolute",
@@ -139,14 +159,19 @@ export default function Map({ highlight } : {highlight?: string}) {
                         left: `${row.pos[0] * squreSize + squreSize / 2.5}px`
                     }} direction={row.row ? "row" : "column"} spacing={2} width={"fit-content"}>
                         {row.data.map(m => (
-                            <Badge
+                            tempMacDeData[m].type === "icon" ? <Box
+                                border={"solid 1px white"} borderRadius={"5px"}
+                                display={"flex"} alignItems={"center"} justifyContent={"center"}
+                                width={tempMacDeData[m]?.size?.width * squreSize} height={tempMacDeData[m]?.size?.height * squreSize}>
+                                {iconMap[tempMacDeData[m].label]}
+                            </Box> : <Badge
                                 anchorOrigin={{
                                     vertical: 'bottom',
                                     horizontal: 'left',
                                 }} badgeContent={tempMacDeData[m].label}
                                 color={"secondary"} sx={{height: "fit-content"}}
                             >
-                                <MachineDetails data={tempMacDeData[m]}>
+                                <MachineDetails data={tempMacDeData[m]} unclickable={tempMacDeData[m].unclickable}>
                                     <Button variant={"contained"} sx={{
                                         minWidth: 0,
                                         minHeight: 0,

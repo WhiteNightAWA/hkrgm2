@@ -20,7 +20,7 @@ import {Link} from "react-router";
 export default function MachineDetails({children, data, openlabel}: {
     children?: ReactNode,
     data: MachineDetailsType,
-    openlabel?: string
+    openlabel?: string,
 }) {
     const [open, setOpen] = useState(false);
 

@@ -7,7 +7,7 @@ export function Home() {
     return <Stack spacing={2} alignItems={"center"} textAlign={"center"} height={"100%"}>
 
         <Alert sx={{m: 1}} severity="warning">此網站仍然WIP,
-            如果你發現任何bug或有建議，請聯繫IG@whitenightawa.rhythm</Alert>
+            如果你發現任何bug或有建議，請聯繫 me: IG@whitenightawa.rhythm or admin: DISCORD#hello_mayumi</Alert>
         <br/>
         <h1><b>Welcome to</b></h1>
         <p className={"background-gradient"} style={{fontSize: "4rem"}}>HKRGM2</p>
