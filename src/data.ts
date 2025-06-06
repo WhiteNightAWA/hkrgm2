@@ -47,7 +47,8 @@ export const gameAvatar: { [key: string]: string } = {
     jubeat: "https://e1.pngegg.com/pngimages/341/12/png-clipart-bemani-icons-v6-jubeat-white-and-black-e-letter-logo-thumbnail.png",
     sdvx: "https://cdn2.steamgriddb.com/icon_thumb/95956b13453a5aeea9db63de9ba64dec.png",
     taiko: "https://pbs.twimg.com/profile_images/501238914330271744/znFmAp9R_400x400.jpeg",
-    chunithm: "https://chunithm.tw/logo.png"
+    chunithm: "https://chunithm.tw/logo.png",
+    gc: "https://groovecoaster.com/apps/images/gc2_logo_mark.png"
 }
 
 export interface PlaceType {
