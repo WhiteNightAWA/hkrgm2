@@ -1,7 +1,7 @@
 import {
     Avatar,
     AvatarGroup,
-    Badge,
+    Badge, Box,
     Button,
     ButtonGroup,
     Card,
@@ -41,6 +41,7 @@ export interface filterType {
     place: string;
     games: string[];
     coins: boolean | null;
+    close: boolean;
 }
 
 type Item = { [key: string]: string | number | null };
@@ -84,6 +85,7 @@ export function Search() {
         place: "all",
         games: [],
         coins: null,
+        close: false
     });
 
     const {data, loadData} = useContext(PlacesContext);
@@ -112,6 +114,7 @@ export function Search() {
             && (t.place === filter.place || filter.place === "all")
             && filter.games.every(g => Object.keys(t.games).includes(g))
             && (filter.coins === null || filter.coins === t.coins)
+            && (filter.close === null || filter.close === (t.close === 1) || t.close === 0)
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
@@ -150,6 +153,9 @@ export function Search() {
                 const results = sortedResult.map(t => {
                     return <Card key={t.name}>
                         <CardActionArea onClick={() => navigate("/info/" + t.id)}>
+                            {t.close === 1 && <Box sx={{backgroundColor: "darkred", textAlign: "center"}}>
+                                此機舖已結業!
+                            </Box>}
                             <CardHeader title={t.name} sx={{pb: 0}}/>
                             <CardContent sx={{pt: 0}}>
                                 <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}

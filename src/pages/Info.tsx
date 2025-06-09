@@ -1,10 +1,18 @@
 import {useParams} from "react-router";
 import {
     Alert,
+    Avatar,
     Box,
     Button,
-    Chip, Dialog, DialogTitle,
-    Divider, List, ListItemButton,
+    Card,
+    CardActions,
+    CardContent,
+    Chip,
+    Dialog,
+    DialogTitle,
+    Divider,
+    List,
+    ListItemButton,
     Paper,
     Rating,
     Stack,
@@ -18,12 +26,29 @@ import {
 } from "@mui/material";
 import {gamesMap, mobileCheck, PlaceList, PlaceType} from "../data.ts";
 import {CreditCard, Label, MonetizationOn, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
-import Comments from "../components/Comments.tsx";
-import AddComment from "../components/AddComment.tsx";
-import {useContext, useState} from "react";
+import Ratings from "../components/Ratings.tsx";
+import AddRating from "../components/AddRating.tsx";
+import {useContext, useEffect, useState} from "react";
 import {PlacesContext} from "../App.tsx";
 import Map, {tempMacDeData} from "../components/Map.tsx";
 import MachineDetails from "../components/MachineDetails.tsx";
+import AddComment from "../components/AddComment.tsx";
+import {axios} from "../main.tsx";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
+import "../styles/info.css"
+
+interface CommentProps {
+    id: number;
+    userid: number;
+    targetId: string;
+    content: string
+    title: string;
+    images: string;
+    time: string;
+    username: string;
+    avatar: string;
+}
 
 export function Info() {
     const id = useParams().id || "";
@@ -36,12 +61,58 @@ export function Info() {
 
     const [selected, setSelected] = useState<string>("");
 
+    const [comments, setComments] = useState<CommentProps[]>([]);
+
+
+    const renderComments = (left: number) => {
+        return comments.map((comment, index) =>
+                index % 2 === left && <Card elevation={4} sx={{width: "100%"}} key={comment.username}>
+                    <CardContent>
+                        <Typography variant={"h5"}>
+                            {comment.title}
+                        </Typography>
+                        <Typography color={"textSecondary"}>
+                            {comment.content}
+                        </Typography>
+
+                        {comment.images.length > 0 && <ImageGallery items={JSON.parse(comment.images).map((i: string) => {
+                            return {
+                                original: `https://res.cloudinary.com/dwspfktjh/image/upload/v1749505748/${i}`,
+                                originalClass: "displayImage"
+                            }
+                        })} autoPlay showBullets/>}
+                    </CardContent>
+                    <CardActions>
+                        <Stack direction={isMobile ? "column" : "row"} spacing={1}>
+                            <Stack direction={"row"}>
+                                <Avatar src={comment.avatar} alt={comment.username} sx={{width: 25, height: 25}}/>
+                                <Typography>{comment.username}</Typography>
+                            </Stack>
+                            <Typography color={"textSecondary"}>{comment.time}</Typography>
+                        </Stack>
+                    </CardActions>
+                </Card>
+        )
+    }
+    console.log(data);
+
+    useEffect(() => {
+        if (data?.close) {
+            axios.get("/comments/" + id).then(r => {
+                if (r.status === 200) {
+                    setComments(JSON.parse(r.data));
+                }
+            });
+        }
+    }, [id]);
+
     return <>{data === null ? <></> :
         <Stack overflow={"auto"} mb={5}>
 
             {data.img &&
                 <div style={{position: "relative"}}>
-                    <img src={data.img} alt={"image of place"} style={{width: "100%"}}/>
+                    <img src={data.img} alt={"image of place"}
+                         style={{width: "100%", maxHeight: "50vh", objectFit: "cover"}}/>
                     <div className={"gradient-overlay"}/>
                 </div>
             }
@@ -53,6 +124,9 @@ export function Info() {
                 </Typography>
                 {data.check !== 1 && <Alert severity={"warning"}>
                     此機舖內容尚未被證實, 資料僅供參考
+                </Alert>}
+                {data.close && <Alert severity={"error"}>
+                    此機舖已結業!
                 </Alert>}
                 <Typography variant={isMobile ? "h4" : "h1"}>
                     {data.name}
@@ -71,6 +145,15 @@ export function Info() {
                 <Typography color={"textSecondary"}>
                     {data.desc}
                 </Typography>
+
+                <Stack spacing={3}>
+                    <Divider>結業留言區</Divider>
+                    <AddComment id={id}/>
+                    <Stack direction={isMobile ? "column" : "row"} spacing={2}>
+                        <Stack width={"100%"} spacing={2}>{renderComments(0)}</Stack>
+                        <Stack width={"100%"} spacing={2}>{renderComments(1)}</Stack>
+                    </Stack>
+                </Stack>
 
                 <Stack direction={isMobile ? "column" : "row"} spacing={2} justifyContent={"space-around"}>
 
@@ -149,14 +232,15 @@ export function Info() {
                             <Stack direction={"row"} justifyContent={"space-around"}>
                                 <Rating value={data.smoke} icon={<SmokingRooms color={"error"}/>}
                                         precision={0.1}
-                                        emptyIcon={<SmokeFree/>} readOnly />
+                                        emptyIcon={<SmokeFree/>} readOnly/>
                                 <Rating value={data.people} icon={<People color={"secondary"}/>}
                                         precision={0.1}
                                         emptyIcon={<PeopleOutline/>} readOnly/>
                             </Stack>
 
-                            <Comments id={id}/>
-                            <AddComment id={id}/>
+                            <Ratings id={id}/>
+                            {data.close ? <Button variant={"outlined"} disabled>機舖已結業</Button> :
+                                <AddRating id={id}/>}
 
                         </Stack>
                         <Stack spacing={1}>

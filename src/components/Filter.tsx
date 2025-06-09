@@ -3,8 +3,8 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Autocomplete,
-    FormControl,
+    Autocomplete, Checkbox,
+    FormControl, FormControlLabel,
     Icon,
     InputLabel,
     MenuItem,
@@ -77,6 +77,7 @@ export function Filter({filter, setFilter}: {
                         <ToggleButton value={0}><CreditCard/></ToggleButton>
                     </ToggleButtonGroup>
 
+                    <FormControlLabel control={<Checkbox checked={filter.close} onChange={(_e, checked) => setFilter({ ...filter, close: checked })}/>} label="顯示已結業的機舖" />
                 </Stack>
             </AccordionDetails>
         </Accordion>

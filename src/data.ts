@@ -52,6 +52,7 @@ export const gameAvatar: { [key: string]: string } = {
 }
 
 export interface PlaceType {
+    close: number;
     id: string;
     name: string;
     desc: string;

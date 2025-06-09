@@ -42,7 +42,7 @@ interface CommentProps {
     avatar: string | null;
 }
 
-export default function Comments({id}: { id: string | undefined }) {
+export default function Ratings({id}: { id: string | undefined }) {
     const [open, setOpen] = useState(false);
     const [comments, setComments] = useState<CommentProps[]>([]);
     const [fail, setFail] = useState(false);
@@ -53,7 +53,7 @@ export default function Comments({id}: { id: string | undefined }) {
     const isMobile = mobileCheck();
 
     useEffect(() => {
-        axios.get("/comments/" + id).then(r => {
+        axios.get("/ratings/" + id).then(r => {
             if (r.status === 200) {
                 setComments(JSON.parse(r.data));
             } else {
@@ -64,14 +64,14 @@ export default function Comments({id}: { id: string | undefined }) {
 
     return (<>
         <Button variant="contained" onClick={() => setOpen(true)}>
-            Check Comments
+            Check Ratings
         </Button>
 
         <Dialog open={open} onClose={() => setOpen(false)} fullScreen={isMobile} maxWidth={"md"}
                 fullWidth scroll={"paper"}>
             <Paper sx={{mb: 1}}>
                 <Toolbar sx={{justifyContent: "space-between"}}>
-                    <h2>Comments ({comments.length})</h2>
+                    <h2>Ratings ({comments.length})</h2>
                     <IconButton onClick={() => setOpen(false)}><Close/></IconButton>
                 </Toolbar>
             </Paper>
@@ -88,7 +88,7 @@ export default function Comments({id}: { id: string | undefined }) {
                 </Stack>
                 {fail ? <Center>
                     <Typography variant="h4">
-                        Load Comment Fail!
+                        Load Ratings Fail!
                     </Typography>
                     <Typography color="textSecondary">
                         Please Check your internet connection.
