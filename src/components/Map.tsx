@@ -162,7 +162,7 @@ export default function Map({ highlight } : {highlight?: string}) {
                             tempMacDeData[m].type === "icon" ? <Box
                                 border={"solid 1px white"} borderRadius={"5px"}
                                 display={"flex"} alignItems={"center"} justifyContent={"center"}
-                                width={tempMacDeData[m]?.size?.width * squreSize} height={tempMacDeData[m]?.size?.height * squreSize}>
+                                width={(tempMacDeData[m]?.size?.width || 0) * squreSize} height={(tempMacDeData[m]?.size?.height || 0) * squreSize}>
                                 {iconMap[tempMacDeData[m].label]}
                             </Box> : <Badge
                                 anchorOrigin={{

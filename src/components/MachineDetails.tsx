@@ -21,6 +21,7 @@ export default function MachineDetails({children, data, openlabel}: {
     children?: ReactNode,
     data: MachineDetailsType,
     openlabel?: string,
+    unclickable?: boolean,
 }) {
     const [open, setOpen] = useState(false);
 
