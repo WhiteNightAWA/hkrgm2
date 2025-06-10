@@ -75,7 +75,7 @@ export function Info() {
                             {comment.content}
                         </Typography>
 
-                        {comment.images.length !== 0 && <ImageGallery items={JSON.parse(comment.images).map((i: string) => {
+                        {JSON.parse(comment.images).length > 0 && <ImageGallery items={JSON.parse(comment.images).map((i: string) => {
                             return {
                                 original: `https://res.cloudinary.com/dwspfktjh/image/upload/v1749505748/${i}`,
                                 originalClass: "displayImage"
