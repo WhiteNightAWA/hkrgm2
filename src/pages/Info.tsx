@@ -75,7 +75,7 @@ export function Info() {
                             {comment.content}
                         </Typography>
 
-                        {comment.images.length > 0 && <ImageGallery items={JSON.parse(comment.images).map((i: string) => {
+                        {comment.images.length !== 0 && <ImageGallery items={JSON.parse(comment.images).map((i: string) => {
                             return {
                                 original: `https://res.cloudinary.com/dwspfktjh/image/upload/v1749505748/${i}`,
                                 originalClass: "displayImage"
@@ -146,14 +146,16 @@ export function Info() {
                     {data.desc}
                 </Typography>
 
-                <Stack spacing={3}>
-                    <Divider>結業留言區</Divider>
-                    <AddComment id={id}/>
-                    <Stack direction={isMobile ? "column" : "row"} spacing={2}>
-                        <Stack width={"100%"} spacing={2}>{renderComments(0)}</Stack>
-                        <Stack width={"100%"} spacing={2}>{renderComments(1)}</Stack>
+                {data.close &&
+                    <Stack spacing={3}>
+                        <Divider>結業留言區</Divider>
+                        <AddComment id={id}/>
+                        <Stack direction={isMobile ? "column" : "row"} spacing={2}>
+                            <Stack width={"100%"} spacing={2}>{renderComments(0)}</Stack>
+                            <Stack width={"100%"} spacing={2}>{renderComments(1)}</Stack>
+                        </Stack>
                     </Stack>
-                </Stack>
+                }
 
                 <Stack direction={isMobile ? "column" : "row"} spacing={2} justifyContent={"space-around"}>
 
