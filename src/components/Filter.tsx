@@ -3,8 +3,11 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Autocomplete, Checkbox,
-    FormControl, FormControlLabel,
+    Autocomplete,
+    Button,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
     Icon,
     InputLabel,
     MenuItem,
@@ -15,8 +18,8 @@ import {
     ToggleButtonGroup,
     Typography,
 } from "@mui/material";
-import {CreditCard, ExpandMore, FilterAlt, MonetizationOn} from "@mui/icons-material";
-import {filterType} from "../pages/Search.tsx";
+import {Cancel, CreditCard, ExpandMore, FilterAlt, MonetizationOn} from "@mui/icons-material";
+import {filterInit, filterType} from "../pages/Search.tsx";
 import {gamesMap, PlaceList} from "../data.ts";
 
 export function Filter({filter, setFilter}: {
@@ -27,8 +30,25 @@ export function Filter({filter, setFilter}: {
             <AccordionSummary
                 expandIcon={<ExpandMore/>}
             >
-                <Icon sx={{mr: 2}}><FilterAlt/></Icon>
-                <Typography variant="h6">Filter</Typography>
+                <Stack width={"100%"} direction={"row"} justifyContent={"space-between"}>
+
+
+                    <Typography variant="h6">
+                        <Icon sx={{mr: 2}}><FilterAlt/></Icon>
+                        Filter
+                    </Typography>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setFilter(filterInit)}
+                        startIcon={<Cancel/>}
+                        size={"small"}
+                        sx={{ mr: 1 }}
+                        color={"warning"}
+                    >
+                        Clear
+                    </Button>
+
+                </Stack>
             </AccordionSummary>
             <AccordionDetails>
                 <Stack spacing={2}>
@@ -72,12 +92,16 @@ export function Filter({filter, setFilter}: {
                         options={Object.keys(gamesMap)}
                     />
 
-                    <ToggleButtonGroup exclusive value={filter.coins} onChange={(_e, n) => setFilter({...filter, coins: n})}>
+                    <ToggleButtonGroup exclusive value={filter.coins}
+                                       onChange={(_e, n) => setFilter({...filter, coins: n})}>
                         <ToggleButton value={1}><MonetizationOn/></ToggleButton>
                         <ToggleButton value={0}><CreditCard/></ToggleButton>
                     </ToggleButtonGroup>
 
-                    <FormControlLabel control={<Checkbox checked={filter.close} onChange={(_e, checked) => setFilter({ ...filter, close: checked })}/>} label="顯示已結業的機舖" />
+                    <FormControlLabel control={<Checkbox checked={filter.close} onChange={(_e, checked) => setFilter({
+                        ...filter,
+                        close: checked
+                    })}/>} label="顯示已結業的機舖"/>
                 </Stack>
             </AccordionDetails>
         </Accordion>

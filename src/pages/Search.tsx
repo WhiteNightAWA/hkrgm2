@@ -78,15 +78,16 @@ function haversineDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
     return R * c;
 }
 
+export const filterInit: filterType = {
+    name: "",
+    place: "all",
+    games: [],
+    coins: null,
+    close: false
+};
 
 export function Search() {
-    const [filter, setFilter] = useState<filterType>({
-        name: "",
-        place: "all",
-        games: [],
-        coins: null,
-        close: false
-    });
+    const [filter, setFilter] = useState<filterType>(filterInit);
 
     const {data, loadData} = useContext(PlacesContext);
 
@@ -121,9 +122,16 @@ export function Search() {
     }).sort(compareByKey(sortType[sort], direction));
 
     const ref = useRef<HTMLDivElement>(null);
+
     useEffect(() => {
-        console.log(ref.current?.style.width);
-    }, [ref])
+        const lf = localStorage.getItem("hkrgm2.filter");
+        if (lf !== null) {
+            setFilter(JSON.parse(lf));
+        }
+    }, []);
+    useEffect(() => {
+        localStorage.setItem("hkrgm2.filter", JSON.stringify(filter));
+    }, [filter])
 
     return (
         <Stack sx={{
