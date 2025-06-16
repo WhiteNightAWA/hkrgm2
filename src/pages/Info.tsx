@@ -25,7 +25,17 @@ import {
     Typography
 } from "@mui/material";
 import {gamesMap, mobileCheck, PlaceList, PlaceType} from "../data.ts";
-import {CreditCard, Label, MonetizationOn, People, PeopleOutline, SmokeFree, SmokingRooms} from "@mui/icons-material";
+import {
+    Air,
+    CreditCard,
+    DeviceThermostat,
+    Label,
+    MonetizationOn,
+    People,
+    PeopleOutline,
+    SmokeFree,
+    SmokingRooms
+} from "@mui/icons-material";
 import Ratings from "../components/Ratings.tsx";
 import AddRating from "../components/AddRating.tsx";
 import {useContext, useEffect, useState} from "react";
@@ -37,6 +47,7 @@ import {axios} from "../main.tsx";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "../styles/info.css"
+import Center from "../components/Center.tsx";
 
 interface CommentProps {
     id: number;
@@ -245,6 +256,38 @@ export function Info() {
                                 <AddRating id={id}/>}
 
                         </Stack>
+                        <Stack spacing={1}>
+                            <Divider>Information</Divider>
+                            <Stack direction={"row"} width={"100%"} justifyContent={"space-around"}>
+                                <Stack alignItems={"center"}>
+                                    <DeviceThermostat />
+                                    NO INFO
+                                </Stack>
+
+                                <Divider orientation={"vertical"} flexItem></Divider>
+
+                                <Stack alignItems={"center"}>
+                                    <Air />
+                                    NO INFO
+                                </Stack>
+                            </Stack>
+                            {data.openings !== null ? <TableContainer component={Paper}>
+                                <Table size={"small"}>
+                                    <TableBody>
+                                        {Object.entries(data.openings).map((op , index) => <TableRow key={`openings-${index}`}>
+                                            <TableCell>
+                                                {op[0]}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {op[1]}
+                                            </TableCell>
+                                        </TableRow>)}
+
+                                    </TableBody>
+                                </Table>
+                            </TableContainer> : <Center>Opening Hour Unknow</Center>}
+                        </Stack>
+
                         <Stack spacing={1}>
 
                             <Divider>Others</Divider>

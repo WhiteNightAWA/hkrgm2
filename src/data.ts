@@ -52,6 +52,7 @@ export const gameAvatar: { [key: string]: string } = {
 }
 
 export interface PlaceType {
+    openings: { [key: string]: string } | null;
     close: number;
     id: string;
     name: string;
@@ -75,6 +76,7 @@ export interface PlaceType {
 }
 
 export interface DBPlaceType {
+    openings: string;
     id: string;
     name: string;
     desc: string;

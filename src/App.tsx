@@ -42,6 +42,7 @@ function App() {
                     d.nicks = JSON.parse(d.nicks);
                     d.games = JSON.parse(d.games);
                     d.links = JSON.parse(d.links);
+                    d.openings = JSON.parse(d.openings)
 
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-expect-error
