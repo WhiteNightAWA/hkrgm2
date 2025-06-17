@@ -126,11 +126,19 @@ export const mobileCheck = function() {
     return check;
 };
 
+export function isWeakJson(item: string): boolean {
+    try {
+        JSON.parse(item);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
 export function isJson(item: string): boolean {
     let value = typeof item !== "string" ? JSON.stringify(item) : item;
     try {
         value = JSON.parse(value);
-    } catch (e) {
+    } catch (_) {
         return false;
     }
 

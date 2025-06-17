@@ -2,13 +2,18 @@ import {Button, Dialog, DialogActions, DialogContent, DialogTitle} from "@mui/ma
 import {Edit, Save} from "@mui/icons-material";
 import {useContext, useState} from "react";
 import {Editor} from "@monaco-editor/react";
-import {isJson, PlaceType} from "../data.ts";
+import {isJson} from "../data.ts";
 import {axios} from "../main.tsx";
-import {UserContext} from "../App.tsx";
+import {PlacesContext, UserContext} from "../App.tsx";
 
-export default function EditInfo(data: { data: PlaceType } | null) {
+export default function EditInfo({ id }: { id: string }) {
+    const d = useContext(PlacesContext).data || {};
+    const data = d[id];
+    console.log(data);
+
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(JSON.stringify(data, null, 4));
+
 
     const userData = useContext(UserContext);
 

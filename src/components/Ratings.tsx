@@ -94,7 +94,7 @@ export default function Ratings({id}: { id: string | undefined }) {
                         Please Check your internet connection.
                     </Typography>
                 </Center> : <Stack spacing={3} p={2}>
-                    {comments.map((c) => <Card sx={{m: 2}} elevation={4}>
+                    {comments.map((c) => <Card sx={{m: 2}} elevation={4} key={c.username}>
                         <CardHeader
                             title={c.username}
                             subheader={c.time}

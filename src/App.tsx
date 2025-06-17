@@ -13,7 +13,7 @@ import {
 import {Home, Logout, Settings} from "@mui/icons-material";
 import {Outlet, useNavigate} from "react-router";
 import {createContext, useEffect, useState} from "react";
-import {DBPlaceType, mobileCheck, PlacesInterface, PlaceType, UserInterface} from "./data.ts";
+import {DBPlaceType, isWeakJson, mobileCheck, PlacesInterface, PlaceType, UserInterface} from "./data.ts";
 import {axios} from "./main.tsx";
 import {useGoogleLogin} from "@react-oauth/google";
 
@@ -33,17 +33,16 @@ function App() {
         setPlacesData({data: {}, loadData: loadData});
         // Update indexDB data
         await axios.get("/places/all").then(r => {
-            console.log(r);
             if (r.status === 200) {
                 const rs: DBPlaceType[] = JSON.parse(r.data);
                 const places: { [key: string]: PlaceType } = {};
                 rs.map(async (d) => {
 
-                    d.nicks = JSON.parse(d.nicks);
-                    d.games = JSON.parse(d.games);
-                    d.links = JSON.parse(d.links);
-                    d.openings = JSON.parse(d.openings)
-
+                    Object.entries(d).map(([key, value]) => {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
+                        d[key] = isWeakJson(value) ? JSON.parse(value) : value;
+                    })
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-expect-error
                     places[d.id] = d;
@@ -91,7 +90,6 @@ function App() {
         (async () => {
             await loadData();
             const data = await axios.get("/user/info");
-            console.log(data);
             setUserData(JSON.parse(data.data));
         })()
     }, []);

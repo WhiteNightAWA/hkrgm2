@@ -63,7 +63,7 @@ interface CommentProps {
 }
 
 export function Info() {
-    const id = useParams().id || "";
+    const id: string = useParams().id || "";
 
     const d = useContext(PlacesContext).data || {};
 
@@ -272,7 +272,7 @@ export function Info() {
                                     NO INFO
                                 </Stack>
                             </Stack>
-                            {data.openings !== null ? <TableContainer component={Paper}>
+                            {(data.openings !== undefined && data.openings !== null) ? <TableContainer component={Paper}>
                                 <Table size={"small"}>
                                     <TableBody>
                                         {Object.entries(data.openings).map((op , index) => <TableRow key={`openings-${index}`}>
@@ -302,7 +302,7 @@ export function Info() {
                             <Button fullWidth variant={"outlined"}>
                                 Report problems
                             </Button>
-                            <EditInfo data={data}/>
+                            <EditInfo id={id}/>
                         </Stack>
                     </Stack>
                 </Stack>

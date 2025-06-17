@@ -170,8 +170,9 @@ export function Search() {
                                        sx={{lineHeight: 0}}>
                                     <h3>{PlaceList[t.place]}-{t.placeD}</h3>
                                     {t.coins ? <MonetizationOn/> : <CreditCard/>}
-                                    {t.star?.toFixed(1)}
-                                    {t.star !== null && <Rating value={t.star} size={"small"} readOnly precision={0.1} />}
+                                    {t.star !== null && t.star?.toFixed(1)}
+                                    {t.star !== null &&
+                                        <Rating value={t.star} size={"small"} readOnly precision={0.1}/>}
                                     {!t.distance ?
                                         <IconButton onClick={() => window.open(t.google, "_blank")}>
                                             <LocationOn/>
@@ -184,9 +185,12 @@ export function Search() {
                                     <AvatarGroup max={7} total={Object.keys(t.games).length}
                                                  spacing={"medium"}>
                                         {Object.entries(t.games).map(([k, n]) =>
-                                            <Badge badgeContent={n[0]}
-                                                   anchorOrigin={{horizontal: "left", vertical: "top"}}
-                                                   color={"primary"}>
+                                            <Badge
+                                                badgeContent={n[0]}
+                                                anchorOrigin={{horizontal: "left", vertical: "top"}}
+                                                color={"primary"}
+                                                key={`${k}`}
+                                            >
                                                 <Avatar key={k} alt={k} src={gameAvatar[k]}/>
                                             </Badge>
                                         )}
@@ -210,7 +214,7 @@ export function Search() {
                 return mobileCheck() ? <Stack spacing={2}>
                     {...results}
                 </Stack> : <Grid2 container spacing={2}>
-                    {results.map(r => <Grid2 size={4}>
+                    {results.map((r, i) => <Grid2 size={4} key={`g${i}`}>
                         {r}
                     </Grid2>)}
                 </Grid2>

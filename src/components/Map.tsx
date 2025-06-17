@@ -50,7 +50,7 @@ export interface MachineDetailsType {
 const iconMap: {
     [key: string]: ReactElement
 } = {
-    "exit": <Logout />
+    "exit": <Logout/>
 }
 
 export const tempMacDeData: {
@@ -133,7 +133,7 @@ const tempMacData = [
     },
 ];
 
-export default function Map({ highlight } : {highlight?: string}) {
+export default function Map({highlight}: { highlight?: string }) {
     const [open, setOpen] = useState(false);
     const zoomSize = 2;
     const squreSize = 50;
@@ -153,16 +153,21 @@ export default function Map({ highlight } : {highlight?: string}) {
                     height: `${14 * squreSize}px`,
                     width: `${13 * squreSize}px`
                 }}>
-                    {tempMacData.map(row => <Stack sx={{
-                        position: "absolute",
-                        top: `${row.pos[1] * squreSize + squreSize / 2.5}px`,
-                        left: `${row.pos[0] * squreSize + squreSize / 2.5}px`
-                    }} direction={row.row ? "row" : "column"} spacing={2} width={"fit-content"}>
+                    {tempMacData.map((row, index) => <Stack
+                        key={`row-${index}`}
+                        sx={{
+                            position: "absolute",
+                            top: `${row.pos[1] * squreSize + squreSize / 2.5}px`,
+                            left: `${row.pos[0] * squreSize + squreSize / 2.5}px`
+                        }} direction={row.row ? "row" : "column"} spacing={2} width={"fit-content"}>
                         {row.data.map(m => (
                             tempMacDeData[m].type === "icon" ? <Box
                                 border={"solid 1px white"} borderRadius={"5px"}
                                 display={"flex"} alignItems={"center"} justifyContent={"center"}
-                                width={(tempMacDeData[m]?.size?.width || 0) * squreSize} height={(tempMacDeData[m]?.size?.height || 0) * squreSize}>
+                                width={(tempMacDeData[m]?.size?.width || 0) * squreSize}
+                                height={(tempMacDeData[m]?.size?.height || 0) * squreSize}
+                                key={m}
+                            >
                                 {iconMap[tempMacDeData[m].label]}
                             </Box> : <Badge
                                 anchorOrigin={{
@@ -170,6 +175,7 @@ export default function Map({ highlight } : {highlight?: string}) {
                                     horizontal: 'left',
                                 }} badgeContent={tempMacDeData[m].label}
                                 color={"secondary"} sx={{height: "fit-content"}}
+                                key={m}
                             >
                                 <MachineDetails data={tempMacDeData[m]} unclickable={tempMacDeData[m].unclickable}>
                                     <Button variant={"contained"} sx={{
@@ -183,7 +189,7 @@ export default function Map({ highlight } : {highlight?: string}) {
                                         "&:hover": {
                                             filter: "brightness(0.75)"
                                         },
-                                        boxShadow: highlight===tempMacDeData[m].label ? "gold 0 0 1em 1em" : ""
+                                        boxShadow: highlight === tempMacDeData[m].label ? "gold 0 0 1em 1em" : ""
                                     }} color={undefined}>
                                         {gamesMap[tempMacDeData[m].type]}
                                     </Button>
