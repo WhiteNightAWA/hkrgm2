@@ -48,6 +48,7 @@ import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import "../styles/info.css"
 import Center from "../components/Center.tsx";
+import EditInfo from "../components/EditInfo.tsx";
 
 interface CommentProps {
     id: number;
@@ -301,6 +302,7 @@ export function Info() {
                             <Button fullWidth variant={"outlined"}>
                                 Report problems
                             </Button>
+                            <EditInfo data={data}/>
                         </Stack>
                     </Stack>
                 </Stack>
